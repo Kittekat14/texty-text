@@ -22,22 +22,22 @@ export default class Start extends React.Component {
        resizeMode="cover"
        source={require("../assets/BackgroundImage.png")}
      >
-       <View style={styles.container}>
+       <View style={[styles.container, {fontFamily: "Poppins-Regular"}]}>
          <View style={styles.textInputContainer}>
            <TextInput
              style={{
                height: 40,
-               width: '88%',
+               width: "88%",
                borderColor: "gray",
                borderWidth: 1,
                opacity: 0.5,
-               marginBottom: 10
+               marginBottom: 10,
              }}
              onChangeText={(text) => this.setState({ text })}
              value={this.state.text}
              placeholder="Your Name"
            />
-           <View style={{ width: '88%' }}>
+           <View style={{ width: "88%" }}>
              <Button
                title="Go to Chat"
                color="#757083"
@@ -105,7 +105,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "center",
     backgroundColor: "white",
-    fontFamily: "Poppins-Regular",
+    fontWeight: "300",
     fontSize: 16,
     color: "#757083",
   },

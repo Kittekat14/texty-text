@@ -9,13 +9,19 @@ export default class Chat extends React.Component {
     //this.props.navigation.setOptions({ backgroundColor: color });
 
     return (
-      <View style={{ flex: 1, justifyContent: "center", alignItems: "center", backgroundColor: color }}>
-
-        {color === '#090C08' ?
-        <Text style={{ color: 'white' }}>Hello Friends!</Text> :
-        <Text>Hello Friends!</Text>
-        }
-        
+      <View
+        style={{
+          flex: 1,
+          justifyContent: "center",
+          alignItems: "center",
+          backgroundColor: color,
+        }}
+      >
+        {color === "#090C08" || "#474056" ? (
+          <Text style={{ color: "white" }}>Hello Friends!</Text>
+        ) : (
+          <Text>Hello Friends!</Text>
+        )}
       </View>
     );
   }
