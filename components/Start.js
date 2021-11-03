@@ -107,7 +107,6 @@ const styles = StyleSheet.create({
     backgroundColor: "white",
     fontFamily: "Poppins-Regular",
     fontSize: 16,
-    fontWeight: "300",
     color: "#757083",
   },
   colorContainer: {
