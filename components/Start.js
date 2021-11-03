@@ -29,14 +29,15 @@ export default class Start extends React.Component {
        >
          <View style={styles.container}>
            <View style={styles.textInputContainer}>
+             <Text>Type in your Username:</Text>
              <TextInput
                style={{
-                 height: 40,
                  width: "88%",
                  borderColor: "gray",
                  borderWidth: 1,
                  opacity: 0.5,
                  marginBottom: 10,
+                 marginTop: 10,
                }}
                onChangeText={(text) => this.setState({ text })}
                value={this.state.text}
