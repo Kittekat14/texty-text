@@ -17,10 +17,10 @@ export default class Chat extends React.Component {
           backgroundColor: color,
         }}
       >
-        {color === "#090C08" || "#474056" ? (
+        {color === "#090C08" || color === "#474056" ? (
           <Text style={{ color: "white" }}>Hello Friends!</Text>
         ) : (
-          <Text>Hello Friends!</Text>
+          <Text style={{ color: "#000" }}>Hello Friends!</Text>
         )}
       </View>
     );
