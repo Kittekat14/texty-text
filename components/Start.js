@@ -1,6 +1,6 @@
 import React from 'react';
 import { Button, View, Text, TextInput, ImageBackground, StyleSheet, Platform, KeyboardAvoidingView  } from 'react-native';
-//import Poppins from '../assets/fonts/Poppins-Regular.ttf';
+import Poppins from '../assets/fonts/Poppins-Regular.ttf';
 
 export default class Start extends React.Component {
  constructor(props) {
