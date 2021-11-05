@@ -12,6 +12,10 @@ export default class Chat extends React.Component {
   }
 
   componentDidMount() {
+    //get textInput from Start.js and display it in Header
+    let text = this.props.route.params.text;
+    this.props.navigation.setOptions({ title: text });
+
     this.setState({
       messages: [
         {
@@ -24,6 +28,12 @@ export default class Chat extends React.Component {
             avatar: "https://placeimg.com/140/140/any",
           },
         },
+        {
+          _id: 2,
+          text: "You entered the chatroom.",
+          createdAt: new Date(),
+          system: true,
+        },
       ],
     });
   }
@@ -35,19 +45,21 @@ export default class Chat extends React.Component {
   }
 
   render() {
-    // let text = this.props.route.params.text;
-    // let color = this.props.route.params.color;
-    // this.props.navigation.setOptions({ title: text });
+    let text = this.props.route.params.text;
+    let color = this.props.route.params.color;
+    this.props.navigation.setOptions({ title: text });
 
     return (
-      <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
+      <View style={{ flex: 1, backgroundColor: color }}>
         <GiftedChat
           messages={this.state.messages}
           onSend={(messages) => this.onSend(messages)}
           user={{
             _id: 1,
+            name: text
           }}
         />
+        {/* If the platform’s OS is Android, add the component KeyboardAvoidingView; else, insert nothing */}
         {Platform.OS === "android" ? (
           <KeyboardAvoidingView behavior="height" />
         ) : null}
