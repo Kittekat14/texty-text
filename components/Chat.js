@@ -1,6 +1,6 @@
 import React from "react";
 import { KeyboardAvoidingView, View, Platform } from "react-native";
-import { GiftedChat } from "react-native-gifted-chat";
+import { GiftedChat, Bubble } from "react-native-gifted-chat";
 
 export default class Chat extends React.Component {
   constructor(props) {
@@ -12,7 +12,6 @@ export default class Chat extends React.Component {
   }
 
   componentDidMount() {
-
     this.setState({
       messages: [
         {
@@ -39,6 +38,19 @@ export default class Chat extends React.Component {
     this.setState((previousState) => ({
       messages: GiftedChat.append(previousState.messages, messages),
     }));
+  }
+
+  renderBubble(props) {
+    return (
+      <Bubble
+        {...props}
+        wrapperStyle={{
+          right: {
+            backgroundColor: "#000",
+          },
+        }}
+      />
+    );
   }
 
   render() {
