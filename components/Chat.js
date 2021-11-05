@@ -21,7 +21,8 @@ export default class Chat extends React.Component {
           user: {
             _id: 2,
             name: "React Native",
-            avatar: "https://facebook.github.io/react/img/logo_og.png",
+            avatar:
+              "https://wi.wallpapertip.com/wsimgs/30-308464_cool-profile-pictures-1080p.jpg",
           },
         },
         {
@@ -50,6 +51,7 @@ export default class Chat extends React.Component {
           },
           left: {
             backgroundColor: "#42f5bc",
+            marginLeft: 0
           },
         }}
       />
@@ -71,6 +73,8 @@ export default class Chat extends React.Component {
           user={{
             _id: 1,
             name: text,
+            avatar:
+              "https://p0.pikist.com/photos/357/246/kitten-cat-baby-small-baby-cat-cute-sweet-pet-domestic-cat-cat.jpg",
           }}
         />
         {/* If the platform’s OS is Android, add the component KeyboardAvoidingView; else, insert nothing */}
