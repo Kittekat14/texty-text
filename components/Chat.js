@@ -1,5 +1,5 @@
 import React from "react";
-import { View, Text, TextInput } from "react-native";
+import { KeyboardAvoidingView, View, Platform } from "react-native";
 import { GiftedChat } from "react-native-gifted-chat";
 
 export default class Chat extends React.Component {
@@ -35,12 +35,12 @@ export default class Chat extends React.Component {
   }
 
   render() {
-    let text = this.props.route.params.text;
-    let color = this.props.route.params.color;
-    this.props.navigation.setOptions({ title: text });
+    // let text = this.props.route.params.text;
+    // let color = this.props.route.params.color;
+    // this.props.navigation.setOptions({ title: text });
 
     return (
-
+      <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
         <GiftedChat
           messages={this.state.messages}
           onSend={(messages) => this.onSend(messages)}
@@ -48,7 +48,10 @@ export default class Chat extends React.Component {
             _id: 1,
           }}
         />
-  
+        {Platform.OS === "android" ? (
+          <KeyboardAvoidingView behavior="height" />
+        ) : null}
+      </View>
     );
   }
 }
