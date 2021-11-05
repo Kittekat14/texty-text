@@ -12,9 +12,6 @@ export default class Chat extends React.Component {
   }
 
   componentDidMount() {
-    //get textInput from Start.js and display it in Header
-    let text = this.props.route.params.text;
-    this.props.navigation.setOptions({ title: text });
 
     this.setState({
       messages: [
@@ -25,7 +22,7 @@ export default class Chat extends React.Component {
           user: {
             _id: 2,
             name: "React Native",
-            avatar: "https://placeimg.com/140/140/any",
+            avatar: "https://facebook.github.io/react/img/logo_og.png",
           },
         },
         {
@@ -45,9 +42,10 @@ export default class Chat extends React.Component {
   }
 
   render() {
+    //get textInput from Start.js and display it in Header
     let text = this.props.route.params.text;
-    let color = this.props.route.params.color;
     this.props.navigation.setOptions({ title: text });
+    let color = this.props.route.params.color;
 
     return (
       <View style={{ flex: 1, backgroundColor: color }}>
@@ -56,7 +54,7 @@ export default class Chat extends React.Component {
           onSend={(messages) => this.onSend(messages)}
           user={{
             _id: 1,
-            name: text
+            name: text,
           }}
         />
         {/* If the platform’s OS is Android, add the component KeyboardAvoidingView; else, insert nothing */}
