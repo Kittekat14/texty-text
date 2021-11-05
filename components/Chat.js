@@ -12,6 +12,9 @@ export default class Chat extends React.Component {
   }
 
   componentDidMount() {
+    let text = this.props.route.params.text;
+    this.props.navigation.setOptions({ title: text });
+    let color = this.props.route.params.color;
     this.setState({
       messages: [
         {
@@ -30,6 +33,7 @@ export default class Chat extends React.Component {
           text: "You entered the chatroom.",
           createdAt: new Date(),
           system: true,
+          color: {color}
         },
       ],
     });
@@ -51,7 +55,7 @@ export default class Chat extends React.Component {
           },
           left: {
             backgroundColor: "#42f5bc",
-            marginLeft: 0
+            marginLeft: 0,
           },
         }}
       />
@@ -65,8 +69,9 @@ export default class Chat extends React.Component {
     let color = this.props.route.params.color;
 
     return (
-      <View style={{ flex: 1, backgroundColor: color }}>
+      <View style={{ flex: 1, backgroundColor: color, color: "#000" }}>
         <GiftedChat
+          
           renderBubble={this.renderBubble.bind(this)}
           messages={this.state.messages}
           onSend={(messages) => this.onSend(messages)}
@@ -77,10 +82,12 @@ export default class Chat extends React.Component {
               "https://p0.pikist.com/photos/357/246/kitten-cat-baby-small-baby-cat-cute-sweet-pet-domestic-cat-cat.jpg",
           }}
         />
+        
         {/* If the platform’s OS is Android, add the component KeyboardAvoidingView; else, insert nothing */}
         {Platform.OS === "android" ? (
           <KeyboardAvoidingView behavior="height" />
         ) : null}
+
       </View>
     );
   }

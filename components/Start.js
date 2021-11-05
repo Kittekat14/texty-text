@@ -88,7 +88,7 @@ export default class Start extends React.Component {
                  backgroundColor: "#8A95A5",
                  borderRadius: 50 / 2,
                }}
-               onPress={() => this.setBgColor("#8A95A5")}
+               onPress={() => this.setBgColor("#8A95A5DD")}
              ></Text>
              <Text
                style={{
@@ -97,7 +97,7 @@ export default class Start extends React.Component {
                  backgroundColor: "#B9C6AE",
                  borderRadius: 50 / 2,
                }}
-               onPress={() => this.setBgColor("#B9C6AE")}
+               onPress={() => this.setBgColor("#B9C6AEDD")}
              ></Text>
            </View>
          </View>
