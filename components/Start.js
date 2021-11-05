@@ -1,7 +1,5 @@
 import React from 'react';
 import { Button, View, Text, TextInput, ImageBackground, StyleSheet, Platform, KeyboardAvoidingView  } from 'react-native';
-let Poppins = require("../assets/fonts/Poppins-Regular.ttf");
-
 
 export default class Start extends React.Component {
  constructor(props) {
@@ -117,7 +115,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "center",
     backgroundColor: "white",
-    fontFamily: "Poppins",
+    fontFamily: "Poppins-Regular",
     fontWeight: "300",
     fontSize: 16,
     color: "#757083",

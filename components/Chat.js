@@ -5,7 +5,6 @@ import { GiftedChat, Bubble } from "react-native-gifted-chat";
 export default class Chat extends React.Component {
   constructor(props) {
     super(props);
-
     this.state = {
       messages: [],
     };
@@ -14,7 +13,6 @@ export default class Chat extends React.Component {
   componentDidMount() {
     let text = this.props.route.params.text;
     this.props.navigation.setOptions({ title: text });
-    let color = this.props.route.params.color;
     this.setState({
       messages: [
         {
@@ -30,10 +28,9 @@ export default class Chat extends React.Component {
         },
         {
           _id: 2,
-          text: "You entered the chatroom.",
+          text: `${this.props.route.params.text} has entered the chatroom.`,
           createdAt: new Date(),
           system: true,
-          color: {color}
         },
       ],
     });
@@ -71,7 +68,6 @@ export default class Chat extends React.Component {
     return (
       <View style={{ flex: 1, backgroundColor: color, color: "#000" }}>
         <GiftedChat
-          
           renderBubble={this.renderBubble.bind(this)}
           messages={this.state.messages}
           onSend={(messages) => this.onSend(messages)}
@@ -82,12 +78,11 @@ export default class Chat extends React.Component {
               "https://p0.pikist.com/photos/357/246/kitten-cat-baby-small-baby-cat-cute-sweet-pet-domestic-cat-cat.jpg",
           }}
         />
-        
+
         {/* If the platform’s OS is Android, add the component KeyboardAvoidingView; else, insert nothing */}
         {Platform.OS === "android" ? (
           <KeyboardAvoidingView behavior="height" />
         ) : null}
-
       </View>
     );
   }
