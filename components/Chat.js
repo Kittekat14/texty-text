@@ -1,5 +1,6 @@
 import React from "react";
 import { View, Text, StyleSheet } from "react-native";
+import { GiftedChat } from "react-native-gifted-chat";
 
 export default class Chat extends React.Component {
   constructor(props) {
@@ -27,6 +28,12 @@ export default class Chat extends React.Component {
     });
   }
 
+  onSend(messages = []) {
+    this.setState((previousState) => ({
+      messages: GiftedChat.append(previousState.messages, messages),
+    }));
+  }
+
   render() {
     let text = this.props.route.params.text;
     let color = this.props.route.params.color;
@@ -47,6 +54,14 @@ export default class Chat extends React.Component {
         ) : (
           <Text style={{ color: "#000" }}>Hello Friends!</Text>
         )}
+
+        <GiftedChat
+          messages={this.state.messages}
+          onSend={(messages) => this.onSend(messages)}
+          user={{
+            _id: 1,
+          }}
+        />
       </View>
     );
   }
