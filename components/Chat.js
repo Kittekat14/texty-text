@@ -85,11 +85,21 @@ export default class Chat extends React.Component {
       messages,
     });
   };
+  
+  addMessages() {
+    this.referenceMessages.add({
+      _id: 3,
+      text: "random text",
+      createdAt: new Date(),
+      user: "newUser",
+    });
+  }
 
   onSend(messages = []) {
     this.setState((previousState) => ({
       messages: GiftedChat.append(previousState.messages, messages),
     }));
+    this.addMessages;
   }
 
   renderBubble(props) {
