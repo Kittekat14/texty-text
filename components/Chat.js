@@ -1,4 +1,6 @@
 import React from "react";
+const firebase = require("firebase");
+require("firebase/firestore");
 import { KeyboardAvoidingView, View, Platform } from "react-native";
 import { GiftedChat, Bubble } from "react-native-gifted-chat";
 
