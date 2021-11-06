@@ -1,6 +1,12 @@
 import React from "react";
-const firebase = require("firebase");
-require("firebase/firestore");
+const firebase = require('firebase');
+require('firebase/firestore');
+
+// Import the functions you need from the SDKs you need
+import { initializeApp } from 'firebase/app';
+// TODO: Add SDKs for Firebase products that you want to use
+// https://firebase.google.com/docs/web/setup#available-libraries
+
 import { KeyboardAvoidingView, View, Platform } from "react-native";
 import { GiftedChat, Bubble } from "react-native-gifted-chat";
 
@@ -10,7 +16,25 @@ export default class Chat extends React.Component {
     this.state = {
       messages: [],
     };
+
+    // Your web app's Firebase configuration
+    const firebaseConfig = {
+      apiKey: "AIzaSyAVl8wJ9Xy9PkAQjvY72ah1JD6ISfuT_bA",
+      authDomain: "lessenger-d5b80.firebaseapp.com",
+      projectId: "lessenger-d5b80",
+      storageBucket: "lessenger-d5b80.appspot.com",
+      messagingSenderId: "475201686420",
+      appId: "1:475201686420:web:86ff783a4735c6ec46dd81",
+    };
+    // Initialize Firebase
+    if (!firebase.apps.length) {
+      firebase.initializeApp(firebaseConfig);
+    }
+    // reference a collection my database
+    this.referenceChatMessages = firebase.firestore().collection("messages");
   }
+
+  
 
   componentDidMount() {
     let text = this.props.route.params.text;
