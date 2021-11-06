@@ -115,7 +115,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "center",
     backgroundColor: "white",
-    fontFamily: "Poppins-Regular",
+    fontFamily: "Poppins",
     fontWeight: "300",
     fontSize: 16,
     color: "#757083",
