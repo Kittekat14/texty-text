@@ -11,15 +11,7 @@ import { initializeApp } from 'firebase/app';
 import { KeyboardAvoidingView, View, Platform } from "react-native";
 import { GiftedChat, Bubble } from "react-native-gifted-chat";
 
-export default class Chat extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      uid: 0,
-      messages: [],
-    };
-
-    // Your web app's Firebase configuration
+// Your web app's Firebase configuration
     const firebaseConfig = {
       apiKey: "AIzaSyAVl8wJ9Xy9PkAQjvY72ah1JD6ISfuT_bA",
       authDomain: "lessenger-d5b80.firebaseapp.com",
@@ -28,30 +20,50 @@ export default class Chat extends React.Component {
       messagingSenderId: "475201686420",
       appId: "1:475201686420:web:86ff783a4735c6ec46dd81",
     };
+
+export default class Chat extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      uid: 0,
+      messages: [],
+      user: {
+        _id: "",
+        name: "",
+        avatar: "",
+      }
+    };
+
+    
     // Initialize Firebase
     if (!firebase.apps.length) {
       firebase.initializeApp(firebaseConfig);
     }
     // reference a collection my database
-    this.referenceChatMessages = firebase.firestore().collection("messages");
+    this.referenceMessages = firebase.firestore().collection("messages");
   }
 
   componentDidMount() {
     let text = this.props.route.params.text;
     this.props.navigation.setOptions({ title: text });
 
-        this.authUnsubscribe = firebase.auth().onAuthStateChanged((user) => {
-        if (!user) {
-          firebase.auth().signInAnonymously();
-        }
-        this.setState({
-          uid: user.uid,
-          messages: [],
-        });
-        this.unsubscribe = this.referenceMessages
-          .orderBy("createdAt", "desc")
-          .onSnapshot(this.onCollectionUpdate);
-      });
+    this.authUnsubscribe = firebase.auth().onAuthStateChanged((user) => {
+      if (!user) {
+        firebase.auth().signInAnonymously();
+      };
+      this.setState({
+            uid: user.uid,
+            messages: [],
+            user: {
+              _id: user.uid,
+              name: text,
+              avatar: "https://placeimg.com/140/140/any",
+            },
+          });
+      this.unsubscribe = this.referenceMessages
+        .orderBy("createdAt", "desc")
+        .onSnapshot(this.onCollectionUpdate);    
+    });
     
     
     this.setState({
@@ -78,8 +90,11 @@ export default class Chat extends React.Component {
   }
 
   componentWillUnmount() {
+    // stop listening to authentication
+    this.authUnsubscribe();
     this.unsubscribe();
   }
+
 
   onCollectionUpdate = (querySnapshot) => {
     const messages = [];
