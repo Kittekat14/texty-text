@@ -1,6 +1,7 @@
 import React from "react";
 const firebase = require('firebase');
 require('firebase/firestore');
+import { uuid } from "uuidv4";
 
 // Import the functions you need from the SDKs you need
 import { initializeApp } from 'firebase/app';
@@ -14,6 +15,7 @@ export default class Chat extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
+      uid: 0,
       messages: [],
     };
 
@@ -37,10 +39,21 @@ export default class Chat extends React.Component {
   componentDidMount() {
     let text = this.props.route.params.text;
     this.props.navigation.setOptions({ title: text });
-    this.referenceMessages = firebase.firestore().collection("messages");
-    this.unsubscribe = this.referenceMessages.onSnapshot(
-      this.onCollectionUpdate
-    );
+
+        this.authUnsubscribe = firebase.auth().onAuthStateChanged((user) => {
+        if (!user) {
+          firebase.auth().signInAnonymously();
+        }
+        this.setState({
+          uid: user.uid,
+          messages: [],
+        });
+        this.unsubscribe = this.referenceMessages
+          .orderBy("createdAt", "desc")
+          .onSnapshot(this.onCollectionUpdate);
+      });
+    
+    
     this.setState({
       messages: [
         {
@@ -88,10 +101,10 @@ export default class Chat extends React.Component {
   
   addMessages() {
     this.referenceMessages.add({
-      _id: 3,
-      text: "random text",
+      _id: uuid(),
+      text: "Do you wanna hang out?",
       createdAt: new Date(),
-      user: "newUser",
+      user: "Oliver",
     });
   }
 
