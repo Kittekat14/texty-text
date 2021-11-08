@@ -28,8 +28,8 @@ export default class Chat extends React.Component {
       uid: 0,
       messages: [],
       user: {
-        _id: "",
-        name: "",
+        _id: null,
+        name: null,
         avatar: "",
       },
     };
@@ -79,7 +79,7 @@ export default class Chat extends React.Component {
     const messages = [];
     // go through each document
     querySnapshot.forEach((doc) => {
-      // get the QueryDocumentSnapshot's data
+      // get the querysnapshot's data
       let data = doc.data();
       messages.push({
         _id: data._id,
@@ -139,10 +139,9 @@ export default class Chat extends React.Component {
           messages={this.state.messages}
           onSend={(messages) => this.onSend(messages)}
           user={{
-            _id: 1,
-            name: text,
-            avatar:
-              "https://p0.pikist.com/photos/357/246/kitten-cat-baby-small-baby-cat-cute-sweet-pet-domestic-cat-cat.jpg",
+            _id: this.state.uid,
+            name: this.props.route.params.text,
+            avatar: "https://placeimg.com/140/140/any",
           }}
         />
 
