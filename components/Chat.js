@@ -2,8 +2,6 @@ import React from "react";
 import firebase from "firebase";
 import firestore from "firebase";
 
-import { uuid } from "uuidv4";
-
 // Import the functions you need from the SDKs you need
 import { initializeApp } from 'firebase/app';
 // TODO: Add SDKs for Firebase products that you want to use
@@ -96,7 +94,7 @@ export default class Chat extends React.Component {
   
   addMessages() {
     this.referenceMessages.add({
-      _id: uuid(),
+      _id: 3,
       text: "Do you wanna hang out?",
       createdAt: new Date(),
       user: "Oliver",
