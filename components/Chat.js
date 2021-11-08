@@ -27,8 +27,8 @@ export default class Chat extends React.Component {
       uid: 0,
       messages: [],
       user: {
-        _id: null,
-        name: null,
+        _id: "",
+        name: "",
         avatar: "",
       },
     };
