@@ -53,7 +53,7 @@ export default class Chat extends React.Component {
       }
 
       this.setState({
-        uid: user.uid,
+        uid: uuid(),
         user: {
           _id: user.uid,
           name: text,
