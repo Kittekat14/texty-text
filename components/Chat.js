@@ -31,15 +31,14 @@ export default class Chat extends React.Component {
         _id: "",
         name: "",
         avatar: "",
-      }
+      },
     };
 
-    
     // Initialize Firebase
     if (!firebase.apps.length) {
       firebase.initializeApp(firebaseConfig);
     }
-    // reference a collection my database
+    // reference to messages collection in the constructor of my class component
     this.referenceMessages = firebase.firestore().collection("messages");
   }
 
@@ -50,47 +49,27 @@ export default class Chat extends React.Component {
     this.authUnsubscribe = firebase.auth().onAuthStateChanged((user) => {
       if (!user) {
         firebase.auth().signInAnonymously();
-      };
-      this.setState({
-            uid: user.uid,
-            messages: [],
-            user: {
-              _id: user.uid,
-              name: text,
-              avatar: "https://placeimg.com/140/140/any",
-            },
-          });
+      }
+
+      // reference to messages collection
       this.unsubscribe = this.referenceMessages
         .orderBy("createdAt", "desc")
-        .onSnapshot(this.onCollectionUpdate);    
-    });
-    
-    
-    this.setState({
-      messages: [
-        {
-          _id: 1,
-          text: "Hello developer",
-          createdAt: new Date(),
-          user: {
-            _id: 2,
-            name: "React Native",
-            avatar:
-              "https://wi.wallpapertip.com/wsimgs/30-308464_cool-profile-pictures-1080p.jpg",
-          },
+        .onSnapshot(this.onCollectionUpdate);
+
+      this.setState({
+        uid: user.uid,
+        messages: [],
+        user: {
+          _id: user.uid,
+          name: text,
+          avatar: "https://placeimg.com/140/140/any",
         },
-        {
-          _id: 2,
-          text: `${this.props.route.params.text} has entered the chatroom.`,
-          createdAt: new Date(),
-          system: true,
-        },
-      ],
+      });
     });
   }
 
   componentWillUnmount() {
-    // stop listening to authentication
+    // stop listening to authentication and collection updates
     this.authUnsubscribe();
     this.unsubscribe();
   }
