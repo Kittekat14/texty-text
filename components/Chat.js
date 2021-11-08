@@ -1,6 +1,7 @@
 import React from "react";
-const firebase = require('firebase');
-require('firebase/firestore');
+import firebase from "firebase";
+import firestore from "firebase";
+
 import { uuid } from "uuidv4";
 
 // Import the functions you need from the SDKs you need
