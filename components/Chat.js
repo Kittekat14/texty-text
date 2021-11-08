@@ -73,7 +73,6 @@ export default class Chat extends React.Component {
     this.unsubscribeChatUser();
   }
 
-
   onCollectionUpdate = (querySnapshot) => {
     const messages = [];
     // go through each document
@@ -91,21 +90,27 @@ export default class Chat extends React.Component {
       messages,
     });
   };
-  
+
   addMessages() {
+    const message = this.state.messages[0];
+    // add the new messages to the collection reference and to firebase
     this.referenceMessages.add({
-      _id: 3,
-      text: "Do you wanna hang out?",
-      createdAt: new Date(),
-      user: "Oliver",
+      uid: this.state.uid,
+      text: message.text,
+      createdAt: message.createdAt,
+      user: message.user,
     });
   }
 
   onSend(messages = []) {
-    this.setState((previousState) => ({
-      messages: GiftedChat.append(previousState.messages, messages),
-    }));
-    this.addMessages;
+    this.setState(
+      (previousState) => ({
+        messages: GiftedChat.append(previousState.messages, messages),
+      }),
+      () => {
+        this.addMessages();
+      }
+    );
   }
 
   renderBubble(props) {
