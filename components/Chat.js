@@ -91,10 +91,10 @@ export default class Chat extends React.Component {
     });
   };
 
-  addMessages= async () => {
+  addMessages() {
     const message = this.state.messages[0];
     // add the new messages to the collection reference and to firebase
-    await this.referenceMessages.add({
+    this.referenceMessages.add({
       uid: this.state.uid,
       text: message.text,
       createdAt: message.createdAt,
