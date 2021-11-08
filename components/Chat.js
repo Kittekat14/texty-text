@@ -1,8 +1,7 @@
 import React from "react";
 import firebase from "firebase";
-//import { firestore } from "firebase";
-// or import("firebase/firestore");
-require("firebase/firestore"); //all work
+import firestore from "firebase";
+
 // Import the functions you need from the SDKs you need
 import { initializeApp } from 'firebase/app';
 // TODO: Add SDKs for Firebase products that you want to use
@@ -25,7 +24,7 @@ export default class Chat extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      _id: 0,
+      uid: 0,
       messages: [],
       user: {
         _id: "",
@@ -78,7 +77,7 @@ export default class Chat extends React.Component {
     const messages = [];
     // go through each document
     querySnapshot.forEach((doc) => {
-      // get the querySnapshot's data
+      // get the querysnapshot's data
       let data = doc.data();
       messages.push({
         _id: data._id,
@@ -96,7 +95,7 @@ export default class Chat extends React.Component {
     const message = this.state.messages[0];
     // add the new messages to the collection reference and to firebase
     this.referenceMessages.add({
-      _id: this.state._id,
+      uid: this.state.uid,
       text: message.text,
       createdAt: message.createdAt,
       user: message.user,
@@ -144,7 +143,7 @@ export default class Chat extends React.Component {
           messages={this.state.messages}
           onSend={(messages) => this.onSend(messages)}
           user={{
-            _id: this.state._id,
+            _id: this.state.uid,
             name: this.props.route.params.text,
             avatar: "https://placeimg.com/140/140/any",
           }}
