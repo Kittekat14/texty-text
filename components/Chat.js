@@ -88,7 +88,7 @@ export default class Chat extends React.Component {
     });
   };
 
-  addMessages() {
+  addMessage() {
     const message = this.state.messages[0];
     // add the new messages to the collection reference and to firebase
     this.referenceMessages.add({
@@ -105,7 +105,7 @@ export default class Chat extends React.Component {
         messages: GiftedChat.append(previousState.messages, messages),
       }),
       () => {
-        this.addMessages();
+        this.addMessage();
       }
     );
   }
