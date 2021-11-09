@@ -24,9 +24,10 @@ export default class Chat extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      uid: 0,
+      uid: "",
       messages: [],
       user: {
+        _id: 0,
         name: "",
         avatar: "",
       },
@@ -45,13 +46,14 @@ export default class Chat extends React.Component {
     this.props.navigation.setOptions({ title: text });
 
     this.authUnsubscribe = firebase.auth().onAuthStateChanged(async (user) => {
-      if (!user) {
+      if (!user) { //must not be a user to be signed in (anonymously)
         await firebase.auth().signInAnonymously();
       }
 
       this.setState({
-        uid: user.uid,
+        uid: this.state.uid,
         user: {
+          _id: Math.round(Math.random*10),
           name: text,
           avatar: "https://placeimg.com/140/140/any",
         },
@@ -60,7 +62,7 @@ export default class Chat extends React.Component {
 
       // reference to messages collection
       this.unsubscribeChatUser = this.referenceMessages
-        .orderBy("createdAt", "desc")
+        .orderBy("createdAt", "desc") //desc = descendent
         .onSnapshot(this.onCollectionUpdate);
     });
   }
@@ -73,14 +75,13 @@ export default class Chat extends React.Component {
 
   onCollectionUpdate = (querySnapshot) => {
     const messages = [];
-    // go through each document
+    // go through each document and get the querysnapshot's data
     querySnapshot.forEach((doc) => {
-      // get the querysnapshot's data
-      let data = doc.data();
       messages.push({
-        text: data.text,
-        createdAt: data.createdAt.toDate(),
-        user: data.user,
+        uid: doc.data.uid,
+        text: doc.data.text,
+        createdAt: doc.data.createdAt.toDate(),
+        user: doc.data.user,
       });
     });
     this.setState({
@@ -100,13 +101,12 @@ export default class Chat extends React.Component {
   }
 
   onSend(messages = []) {
-    this.setState(
-      (previousState) => ({
+    this.setState((previousState) => ({
         messages: GiftedChat.append(previousState.messages, messages),
       }),
       () => {
         this.addMessage();
-      }
+      },
     );
   }
 
@@ -135,13 +135,14 @@ export default class Chat extends React.Component {
 
     return (
       <View style={{ flex: 1, backgroundColor: color, color: "#000" }}>
-        <GiftedChat key={text}
+        <GiftedChat key={this.state.uid}
           renderBubble={this.renderBubble.bind(this)}
           messages={this.state.messages}
           onSend={(messages) => this.onSend(messages)}
           user={{
-            name: this.props.route.params.text,
-            avatar: "https://placeimg.com/140/140/any",
+            _id: this.state.user._id,
+            name: this.state.user.name,
+            avatar: this.state.user.avatar,
           }}
         />
 
