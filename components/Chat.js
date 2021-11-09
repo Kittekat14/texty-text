@@ -27,7 +27,6 @@ export default class Chat extends React.Component {
       uid: 0,
       messages: [],
       user: {
-        _id: "",
         name: "",
         avatar: "",
       },
@@ -53,7 +52,6 @@ export default class Chat extends React.Component {
       this.setState({
         uid: user.uid,
         user: {
-          _id: user.uid,
           name: text,
           avatar: "https://placeimg.com/140/140/any",
         },
@@ -80,7 +78,6 @@ export default class Chat extends React.Component {
       // get the querysnapshot's data
       let data = doc.data();
       messages.push({
-        _id: data._id,
         text: data.text,
         createdAt: data.createdAt.toDate(),
         user: data.user,
@@ -138,12 +135,11 @@ export default class Chat extends React.Component {
 
     return (
       <View style={{ flex: 1, backgroundColor: color, color: "#000" }}>
-        <GiftedChat
+        <GiftedChat key={text}
           renderBubble={this.renderBubble.bind(this)}
           messages={this.state.messages}
           onSend={(messages) => this.onSend(messages)}
           user={{
-            _id: this.state.uid,
             name: this.props.route.params.text,
             avatar: "https://placeimg.com/140/140/any",
           }}

@@ -29,7 +29,6 @@ export default class Start extends React.Component {
        >
          <View style={styles.container}>
            <View style={styles.textInputContainer}>
-             <Text>Type in your Username:</Text>
              <TextInput
                style={{
                  width: "88%",
