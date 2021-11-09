@@ -46,14 +46,15 @@ export default class Chat extends React.Component {
     this.props.navigation.setOptions({ title: text });
 
     this.authUnsubscribe = firebase.auth().onAuthStateChanged(async (user) => {
-      if (!user) { //must not be a user to be signed in (anonymously)
+      if (!user) {
+        //must not be a user to be signed in (anonymously)
         await firebase.auth().signInAnonymously();
       }
 
       this.setState({
         uid: this.state.uid,
         user: {
-          _id: Math.round(Math.random*10),
+          _id: 3,
           name: text,
           avatar: "https://placeimg.com/140/140/any",
         },
@@ -73,10 +74,10 @@ export default class Chat extends React.Component {
     this.unsubscribeChatUser();
   }
 
-  onCollectionUpdate = (querySnapshot) => {
+  onCollectionUpdate = async (querySnapshot) => {
     const messages = [];
     // go through each document
-    querySnapshot.forEach((doc) => {
+    await querySnapshot.forEach((doc) => {
       // get the querysnapshot's data
       let data = doc.data();
       messages.push({
@@ -86,7 +87,7 @@ export default class Chat extends React.Component {
         user: data.user,
       });
     });
-    this.setState({
+    await this.setState({
       messages,
     });
   };
@@ -103,12 +104,11 @@ export default class Chat extends React.Component {
   }
 
   onSend(messages = []) {
-    this.setState((previousState) => ({
+    this.addMessage();
+    this.setState(
+      (previousState) => ({
         messages: GiftedChat.append(previousState.messages, messages),
-      }),
-      () => {
-        this.addMessage();
-      },
+      })
     );
   }
 
@@ -137,7 +137,8 @@ export default class Chat extends React.Component {
 
     return (
       <View style={{ flex: 1, backgroundColor: color, color: "#000" }}>
-        <GiftedChat key={this.state.uid}
+        <GiftedChat
+          key={this.state.uid}
           renderBubble={this.renderBubble.bind(this)}
           messages={this.state.messages}
           onSend={(messages) => this.onSend(messages)}
