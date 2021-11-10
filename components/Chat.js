@@ -72,7 +72,8 @@ export default class Chat extends React.Component {
     this.authUnsubscribe();
     this.unsubscribeChatUser();
   }
-
+  //adding and retrieving messages from/to collection
+  // Comes from the database
   onCollectionUpdate = (querySnapshot) => {
     const messages = [];
     // go through each document
@@ -90,7 +91,7 @@ export default class Chat extends React.Component {
       messages,
     });
   };
-
+    // Comes from my side
   addMessage() {
     const message = this.state.messages[0];//adding the currently sent message
     // add the new messages to the collection reference and to firebase
