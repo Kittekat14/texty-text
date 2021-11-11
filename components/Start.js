@@ -17,7 +17,7 @@ export default class Start extends React.Component {
  render() {
    
    return (
-     <View style={{ flex: 1, heigth: "100%", width: "100%",  }}>
+     <View style={{ flex: 1, heigth: "100%", width: "100%" }}>
        <ImageBackground
          style={{
            flex: 1,
@@ -29,13 +29,12 @@ export default class Start extends React.Component {
        >
          <View style={styles.container}>
            <View style={styles.textInputContainer}>
-             <Text>Fill in Your Name:</Text>
              <TextInput
                style={{
                  width: "88%",
                  borderColor: "gray",
                  borderWidth: 1,
-                 opacity: 0.5,
+                 opacity: 0.8,
                  marginBottom: 10,
                  marginTop: 10,
                }}
@@ -57,8 +56,7 @@ export default class Start extends React.Component {
                />
              </View>
 
-             <Text>Choose Background Color:</Text>
-             
+             <Text style={{ paddingBottom: 5, marginBottom: 20 }}>Choose Background Color:</Text>
            </View>
            <View style={styles.colorContainer}>
              <Text
