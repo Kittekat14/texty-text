@@ -75,11 +75,11 @@ export default class Chat extends React.Component {
       } else {
         console.log("OFFLINE");
         this.setState({ isConnected: false });
-        this.getMessages(); // read messages is possible still if offline
+        this.getMessages(); // read messages is still possible if offline
       }
 
       //gets messages from AsyncStorage
-      async getMessages() {
+      const getMessages = async() => {
         let messages = '';
         try {
           messages = await AsyncStorage.getItem('messages') || [];
@@ -91,7 +91,7 @@ export default class Chat extends React.Component {
         }
       };
       //saves messages in AsyncStorage
-      async saveMessages() {
+      const saveMessages = async() => {
         try {
           await AsyncStorage.setItem('messages', JSON.stringify(this.state.messages));
         } catch (error) {
@@ -99,16 +99,16 @@ export default class Chat extends React.Component {
         }
       };
       //deletes messages from AsyncStorage
-      async deleteMessages() {
+      const deleteMessages = async () => {
         try {
-          await AsyncStorage.removeItem('messages');
+          await AsyncStorage.removeItem("messages");
           this.setState({
-            messages: []
-          })
+            messages: [],
+          });
         } catch (error) {
           console.log(error.message);
         }
-      }
+      };
 
     });
   }
