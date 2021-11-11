@@ -29,6 +29,7 @@ export default class Start extends React.Component {
        >
          <View style={styles.container}>
            <View style={styles.textInputContainer}>
+             <Text>Fill in Your Name:</Text>
              <TextInput
                style={{
                  width: "88%",
@@ -55,9 +56,9 @@ export default class Start extends React.Component {
                  }
                />
              </View>
-             <Text>You wrote: {this.state.text}</Text>
+
              <Text>Choose Background Color:</Text>
-             <Text>You selected: {this.state.background}</Text>
+             
            </View>
            <View style={styles.colorContainer}>
              <Text
