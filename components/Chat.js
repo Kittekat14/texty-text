@@ -8,7 +8,7 @@ import { initializeApp } from "firebase/app";
 // https://firebase.google.com/docs/web/setup#available-libraries
 
 import { KeyboardAvoidingView, View, Platform } from "react-native";
-import { GiftedChat, Bubble } from "react-native-gifted-chat";
+import { GiftedChat, Bubble, InputToolbar } from "react-native-gifted-chat";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import NetInfo from "@react-native-community/netinfo";
 
@@ -33,6 +33,7 @@ export default class Chat extends React.Component {
         name: "",
         avatar: "",
       },
+      isConnected: null
     };
 
     // Initialize Firebase
@@ -200,7 +201,7 @@ export default class Chat extends React.Component {
       <View style={{ flex: 1, backgroundColor: color, color: "#000" }}>
         <GiftedChat
           renderBubble={this.renderBubble.bind(this)}
-          renderInputToolbar
+          renderInputToolbar={this.renderInputToolbar.bind(this)}
           messages={this.state.messages}
           onSend={(messages) => this.onSend(messages)}
           user={{
