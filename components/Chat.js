@@ -54,8 +54,8 @@ export default class Chat extends React.Component {
         console.log('online')
       } else {
         console.log('offline');
-  };
-    
+      }
+    });
 
     this.authUnsubscribe = firebase.auth().onAuthStateChanged(async (user) => {
       if (!user) {
