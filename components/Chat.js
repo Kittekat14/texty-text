@@ -120,6 +120,8 @@ export default class Chat extends React.Component {
     this.authUnsubscribe();
     this.unsubscribeChatUser();
   }
+
+  
   //adding and retrieving messages from/to collection
   // Comes from the database
   onCollectionUpdate = (querySnapshot) => {
