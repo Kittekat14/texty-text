@@ -44,6 +44,38 @@ export default class Chat extends React.Component {
     this.referenceMessages = firebase.firestore().collection("messages");
   }
 
+  //gets messages from AsyncStorage
+  async getMessages() {
+    let messages = '';
+      try {
+        messages = await AsyncStorage.getItem('messages') || [];
+        this.setState({
+          messages: JSON.parse(messages)
+        });
+      } catch (error) {
+        console.log(error.message);
+      }
+  };
+      //saves messages in AsyncStorage
+  async saveMessages() {
+    try {
+      await AsyncStorage.setItem('messages', JSON.stringify(this.state.messages));
+    } catch (error) {
+      console.log(error.message);
+    }
+  };
+      //deletes messages from AsyncStorage
+  async deleteMessages() {
+    try {
+      await AsyncStorage.removeItem("messages");
+      this.setState({
+        messages: [],
+      });
+    } catch (error) {
+      console.log(error.message);
+    }
+  };
+
   componentDidMount() {
     let text = this.props.route.params.text;
     this.props.navigation.setOptions({ title: text });
@@ -54,61 +86,29 @@ export default class Chat extends React.Component {
         this.setState({ isConnected: true });
         console.log("ONLINE");
       //listen to authentication:
-      this.authUnsubscribe = firebase.auth().onAuthStateChanged(async (user) => {
-        if (!user) {
-          await firebase.auth().signInAnonymously();
-        };
-        this.setState({
-          uid: user.uid,
-          user: {
-            _id: user.uid,
-            name: text,
-            avatar: "https://placeimg.com/140/140/any",
-          },
-          messages: [],
+        this.authUnsubscribe = firebase.auth().onAuthStateChanged(async (user) => {
+          if (!user) {
+            await firebase.auth().signInAnonymously();
+          };
+          this.setState({
+            uid: user.uid,
+            user: {
+              _id: user.uid,
+              name: text,
+              avatar: "https://placeimg.com/140/140/any",
+            },
+            messages: [],
+          });
+          // reference to messages collection
+          this.unsubscribeChatUser = this.referenceMessages
+            .orderBy("createdAt", "desc")
+            .onSnapshot(this.onCollectionUpdate)
         });
-        // reference to messages collection
-        this.unsubscribeChatUser = this.referenceMessages
-          .orderBy("createdAt", "desc")
-          .onSnapshot(this.onCollectionUpdate)
-      });
       } else {
         console.log("OFFLINE");
         this.setState({ isConnected: false });
         this.getMessages(); // read messages is still possible if offline
       }
-
-      //gets messages from AsyncStorage
-      const getMessages = async() => {
-        let messages = '';
-        try {
-          messages = await AsyncStorage.getItem('messages') || [];
-          this.setState({
-            messages: JSON.parse(messages)
-          });
-        } catch (error) {
-          console.log(error.message);
-        }
-      };
-      //saves messages in AsyncStorage
-      const saveMessages = async() => {
-        try {
-          await AsyncStorage.setItem('messages', JSON.stringify(this.state.messages));
-        } catch (error) {
-          console.log(error.message);
-        }
-      };
-      //deletes messages from AsyncStorage
-      const deleteMessages = async () => {
-        try {
-          await AsyncStorage.removeItem("messages");
-          this.setState({
-            messages: [],
-          });
-        } catch (error) {
-          console.log(error.message);
-        }
-      };
 
     });
   }
