@@ -77,6 +77,7 @@ export default class Chat extends React.Component {
   };
 
   componentDidMount() {
+    this.getMessages();
     let text = this.props.route.params.text;
     this.props.navigation.setOptions({ title: text });
 
@@ -85,8 +86,7 @@ export default class Chat extends React.Component {
       if (connection.isConnected) {
         this.setState({ isConnected: true });
         console.log("ONLINE");
-        
-      //listen to authentication:
+        //listen to authentication:
         this.authUnsubscribe = firebase.auth().onAuthStateChanged(async (user) => {
           if (!user) {
             await firebase.auth().signInAnonymously();
@@ -100,11 +100,11 @@ export default class Chat extends React.Component {
             },
             messages: [],
           });
-
+          this.saveMessages();
           // reference to messages collection in firebase
           this.unsubscribeChatUser = this.referenceMessages
             .orderBy("createdAt", "desc")
-            .onSnapshot(this.onCollectionUpdate)
+            .onSnapshot(this.onCollectionUpdate);
         });
       } else {
         console.log("OFFLINE");
@@ -201,7 +201,7 @@ export default class Chat extends React.Component {
     return (
       <View style={{ flex: 1, backgroundColor: color, color: "#000" }}>
         <GiftedChat
-          renderBubble={this.renderBubble.bind(this)}
+          renderBubble={this.renderBubble}
           renderInputToolbar={this.renderInputToolbar.bind(this)}
           messages={this.state.messages}
           onSend={(messages) => this.onSend(messages)}
