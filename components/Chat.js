@@ -7,10 +7,12 @@ import { initializeApp } from "firebase/app";
 // TODO: Add SDKs for Firebase products that you want to use
 // https://firebase.google.com/docs/web/setup#available-libraries
 
-import { KeyboardAvoidingView, View, Platform } from "react-native";
+import { KeyboardAvoidingView, View, Platform, LogBox } from "react-native";
 import { GiftedChat, Bubble, InputToolbar } from "react-native-gifted-chat";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import NetInfo from "@react-native-community/netinfo";
+
+LogBox.ignoreAllLogs();
 
 // Your web app's Firebase configuration
 const firebaseConfig = {
@@ -79,7 +81,8 @@ export default class Chat extends React.Component {
   componentDidMount() {
     let text = this.props.route.params.text;
     this.props.navigation.setOptions({ title: text });
-
+    LogBox.ignoreLogs(["Animated: `useNativeDriver`"]);
+    
     // check if user is online or offline
     NetInfo.fetch().then(connection => { 
       if (connection.isConnected) {
@@ -98,11 +101,11 @@ export default class Chat extends React.Component {
               name: text,
               avatar: "https://placeimg.com/140/140/any",
             },
-            // messages: [],
+            messages: [],
           });
           this.getMessages();
 
-          // reference to messages collection
+          // reference to messages collection in firebase
           this.unsubscribeChatUser = this.referenceMessages
             .orderBy("createdAt", "desc")
             .onSnapshot(this.onCollectionUpdate)
