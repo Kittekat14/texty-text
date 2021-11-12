@@ -85,6 +85,7 @@ export default class Chat extends React.Component {
       if (connection.isConnected) {
         this.setState({ isConnected: true });
         console.log("ONLINE");
+        this.getMessages();
       //listen to authentication:
         this.authUnsubscribe = firebase.auth().onAuthStateChanged(async (user) => {
           if (!user) {
@@ -97,8 +98,9 @@ export default class Chat extends React.Component {
               name: text,
               avatar: "https://placeimg.com/140/140/any",
             },
-            messages: [],
+            // messages: [],
           });
+          
           // reference to messages collection
           this.unsubscribeChatUser = this.referenceMessages
             .orderBy("createdAt", "desc")
