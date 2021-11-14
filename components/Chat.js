@@ -1,6 +1,8 @@
 import React from "react";
 import firebase from "firebase";
 import "firebase/firestore";
+import * as Permissions from "expo-permissions";
+import * as ImagePicker from "expo-image-picker";
 
 // Import the functions you need from the SDKs you need
 import { initializeApp } from "firebase/app";
