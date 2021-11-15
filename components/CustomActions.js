@@ -1,20 +1,12 @@
 import React, { Component } from 'react';
 import PropTypes from "prop-types";
-import { TouchableHighlight, View, Text, StyleSheet } from 'react-native';
+import { TouchableHighlight, Image, Button, View, Text, StyleSheet } from 'react-native';
 import * as Permissions from "expo-permissions";
 import * as ImagePicker from "expo-image-picker";
 import * as Location from "expo-location";
 import firebase from "firebase";
-import firestore from "firebase";
 
 export default class CustomActions extends Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      image: null,
-      location: null,
-    };
-  }
 
   // Let the user pick an image from the device's image library:
   pickImage = async () => {
@@ -99,20 +91,14 @@ export default class CustomActions extends Component {
 
     const imageNameBefore = uri.split("/");
     const imageName = imageNameBefore[imageNameBefore.length - 1];
-
     const ref = firebase.storage().ref().child(`images/${imageName}`);
-
     const snapshot = await ref.put(blob);
-
     blob.close();
 
     return await snapshot.ref.getDownloadURL();
   };
 
-  /**
-   * function that handles communication features
-   * @function onActionPress
-   */
+  // function that handles each communication feature
   onActionPress = () => {
     const options = [
       "Choose From Library",
@@ -137,8 +123,9 @@ export default class CustomActions extends Component {
           case 2:
             console.log("user wants to get their location");
             return this.getLocation();
+          default:
         }
-      }
+      },
     );
   };
 

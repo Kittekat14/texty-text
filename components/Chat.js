@@ -13,7 +13,7 @@ import { KeyboardAvoidingView, View, Text, Platform, TouchableOpacity } from "re
 import { GiftedChat, Bubble, InputToolbar } from "react-native-gifted-chat";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import NetInfo from "@react-native-community/netinfo";
-import { MapView } from 'react-native-maps';
+import MapView from 'react-native-maps';
 import CustomActions from './CustomActions';
 
 
@@ -237,8 +237,8 @@ export default class Chat extends React.Component {
         <GiftedChat
           renderBubble={this.renderBubble.bind(this)}
           renderInputToolbar={this.renderInputToolbar.bind(this)}
-          renderActions={this.renderCustomActions} // button inside chat input field that opens up an ActionSheet
-          renderCustomView={this.renderCustomView}
+          renderActions={this.renderCustomActions.bind(this)} // button inside chat input field that opens up an ActionSheet
+          renderCustomView={this.renderCustomView.bind(this)}
           messages={this.state.messages}
           onSend={(messages) => this.onSend(messages)}
           user={{
