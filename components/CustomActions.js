@@ -107,7 +107,7 @@ export default class CustomActions extends Component {
       "Cancel",
     ];
     const cancelButtonIndex = options.length - 1;
-    this.context.actionSheet().showActionSheetWithOptions(
+    this.context.ActionSheet().showActionSheetWithOptions(
       {
         options,
         cancelButtonIndex,
@@ -133,7 +133,7 @@ export default class CustomActions extends Component {
     return (
       <div>
         <TouchableHighlight
-          onPress={this.onActionPress}
+          onPress={this.onActionPress.bind(this)}
           style={[styles.container]}
           underlayColor="white"
         >
@@ -169,6 +169,6 @@ const styles = StyleSheet.create({
 });
 
 CustomActions.contextTypes = {
-  actionSheet: PropTypes.func,
+  ActionSheet: PropTypes.func,
 };
 
