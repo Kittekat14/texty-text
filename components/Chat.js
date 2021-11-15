@@ -15,8 +15,7 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import NetInfo from "@react-native-community/netinfo";
 import { MapView } from 'react-native-maps';
 import CustomActions from './CustomActions';
-import firebase from 'firebase';
-import firestore from 'firebase';
+
 
 // Your web app's Firebase configuration
 const firebaseConfig = {
@@ -40,8 +39,6 @@ export default class Chat extends React.Component {
         avatar: "",
       },
       isConnected: false,
-      // image: null,
-      // location: null
     };
 
     // Initialize Firebase
@@ -232,7 +229,7 @@ export default class Chat extends React.Component {
     return (
       <View style={{ flex: 1, backgroundColor: color, color: "#000" }}>
         <GiftedChat
-          renderBubble={this.renderBubble}
+          renderBubble={this.renderBubble.bind(this)}
           renderInputToolbar={this.renderInputToolbar.bind(this)}
           renderActions={this.renderCustomActions} // button inside chat input field that opens up an ActionSheet
           renderCustomView={this.renderCustomView}

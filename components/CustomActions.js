@@ -1,19 +1,48 @@
 import React, { Component } from 'react';
+import PropTypes from "prop-types";
 import { TouchableHighlight, View, Text, StyleSheet } from 'react-native';
 import * as Permissions from "expo-permissions";
 import * as ImagePicker from "expo-image-picker";
 import * as Location from "expo-location";
-import MapView from "react-native-maps";
+import firebase from "firebase";
+import firestore from "firebase";
 
 export default class CustomActions extends Component {
   constructor(props) {
     super(props);
-
     this.state = {
       image: null,
       location: null,
     };
+  }
+
+  uploadImageFetch = async (uri) => {
+    const blob = await new Promise((resolve, reject) => {
+      const xhr = new XMLHttpRequest();
+      xhr.onload = function () {
+        resolve(xhr.response);
+      };
+      xhr.onerror = function (e) {
+        console.log(e);
+        reject(new TypeError("Network request failed"));
+      };
+      xhr.responseType = "blob";
+      xhr.open("GET", uri, true);
+      xhr.send(null);
+    });
+
+    const imageNameBefore = uri.split("/");
+    const imageName = imageNameBefore[imageNameBefore.length - 1];
+
+    const ref = firebase.storage().ref().child(`images/${imageName}`);
+
+    const snapshot = await ref.put(blob);
+
+    blob.close();
+
+    return await snapshot.ref.getDownloadURL();
   };
+  
 
   onActionPress = () => {
     const options = [
@@ -96,24 +125,11 @@ export default class CustomActions extends Component {
         <TouchableHighlight
           onPress={this.onActionPress}
           style={[styles.container]}
-          //underlayColor="white"
+          underlayColor="white"
         >
           <View style={[styles.wrapper, this.props.wrapperStyle]}>
             <Text style={[styles.iconText, this.props.iconTextStyle]}>+</Text>
           </View>
-
-
-          {location && (
-            <MapView
-              style={{ width: 300, height: 200 }}
-              region={{
-                latitude: location.coords.latitude,
-                longitude: location.coords.longitude,
-                latitudeDelta: 0.0922,
-                longitudeDelta: 0.0421,
-              }}
-            />
-          )}
         </TouchableHighlight>
       </div>
     );
