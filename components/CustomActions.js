@@ -33,11 +33,8 @@ export default class CustomActions extends Component {
 
     const imageNameBefore = uri.split("/");
     const imageName = imageNameBefore[imageNameBefore.length - 1];
-
     const ref = firebase.storage().ref().child(`images/${imageName}`);
-
     const snapshot = await ref.put(blob);
-
     blob.close();
 
     return await snapshot.ref.getDownloadURL();
@@ -61,59 +58,60 @@ export default class CustomActions extends Component {
         switch (buttonIndex) {
           case 0:
             console.log("user wants to pick an image");
-            pickImage = async () => {
-              const { status } = await Permissions.askAsync(
-                Permissions.CAMERA_ROLL
-              );
+            // pickImage = async () => {
+            //   const { status } = await Permissions.askAsync(
+            //     Permissions.CAMERA_ROLL
+            //   );
 
-              if (status === "granted") {
-                let result = await ImagePicker.launchImageLibraryAsync({
-                  mediaTypes: "Images",
-                }).catch((error) => console.log(error));
+            //   if (status === "granted") {
+            //     let result = await ImagePicker.launchImageLibraryAsync({
+            //       mediaTypes: "Images",
+            //     }).catch((error) => console.log(error));
 
-                if (!result.cancelled) {
-                  setState({
-                    image: result,
-                  });
-                }
-              }
-            };
+            //     if (!result.cancelled) {
+            //       setState({
+            //         image: result,
+            //       });
+            //     }
+            //   }
+            // };
             return;
           case 1:
             console.log("user wants to take a photo");
-            takePhoto = async () => {
-              const { status } = await Permissions.askAsync(
-                Permissions.CAMERA_ROLL,
-                Permissions.CAMERA
-              );
-              if (status === "granted") {
-                let result = await ImagePicker.launchCameraAsync().catch(
-                  (error) => console.log(error)
-                );
-                if (!result.cancelled) {
-                  setState({
-                    image: result,
-                  });
-                }
-              }
-            };
+            // takePhoto = async () => {
+            //   const { status } = await Permissions.askAsync(
+            //     Permissions.CAMERA_ROLL,
+            //     Permissions.CAMERA
+            //   );
+            //   if (status === "granted") {
+            //     let result = await ImagePicker.launchCameraAsync().catch(
+            //       (error) => console.log(error)
+            //     );
+            //     if (!result.cancelled) {
+            //       setState({
+            //         image: result,
+            //       });
+            //     }
+            //   }
+            // };
             return;
           case 2:
             console.log("user wants to get their location");
-            getLocation = async () => {
-              const { status } = await Permissions.askAsync(
-                Permissions.LOCATION
-              );
-              if (status === "granted") {
-                let result = await Location.getCurrentPositionAsync({});
-                if (result) {
-                  setState({
-                    location: result,
-                  });
-                }
-              }
-            };
+            // getLocation = async () => {
+            //   const { status } = await Permissions.askAsync(
+            //     Permissions.LOCATION
+            //   );
+            //   if (status === "granted") {
+            //     let result = await Location.getCurrentPositionAsync({});
+            //     if (result) {
+            //       setState({
+            //         location: result,
+            //       });
+            //     }
+            //   }
+            // };
           default:
+            console.log("this is default case");
         }
       }
     );
