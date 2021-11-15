@@ -10,11 +10,11 @@ export default class CustomActions extends Component {
 
   // Let the user pick an image from the device's image library:
   pickImage = async () => {
-    const { status } = await Permissions.askAsync(Permissions.CAMERA_ROLL);
+    const { status } = await Permissions.askAsync(Permissions.MEDIA_LIBRARY);
     try {
       if (status === "granted") {
         const result = await ImagePicker.launchImageLibraryAsync({
-          mediaTypes: ImagePicker.MediaTypeOptions.Images, // only images are allowed
+          mediaTypes: "Images",  //only images
         }).catch((error) => console.log(error));
         if (!result.cancelled) {
           const imageUrl = await this.uploadImageFetch(result.uri);
@@ -29,14 +29,12 @@ export default class CustomActions extends Component {
   // Let the user take a photo with device's camera:
   takePhoto = async () => {
     const { status } = await Permissions.askAsync(
-      Permissions.CAMERA,
-      Permissions.CAMERA_ROLL
+      Permissions.MEDIA_LIBRARY,
+      Permissions.CAMERA
     );
     try {
       if (status === "granted") {
-        const result = await ImagePicker.launchCameraAsync({
-          mediaTypes: ImagePicker.MediaTypeOptions.Images,
-        }).catch((error) => console.log(error));
+        const result = await ImagePicker.launchCameraAsync().catch((error) => console.log(error));
 
         if (!result.cancelled) {
           const imageUrl = await this.uploadImageFetch(result.uri);
@@ -51,18 +49,19 @@ export default class CustomActions extends Component {
   //get the location of the user by using GPS:
   getLocation = async () => {
     try {
-      const { status } = await Permissions.askAsync(Permissions.LOCATION);
+      const { status } = await Location.requestForegroundPermissionsAsync(); 
+      //Permissions.askAsync(Permissions.LOCATION); ->deprecated
       if (status === "granted") {
         const result = await Location.getCurrentPositionAsync({}).catch(
           (error) => console.log(error)
         );
         const longitude = JSON.stringify(result.coords.longitude);
-        const altitude = JSON.stringify(result.coords.latitude);
+        const latitude = JSON.stringify(result.coords.latitude);
         if (result) {
           this.props.onSend({
             location: {
-              longitude: result.coords.longitude,
-              latitude: result.coords.latitude,
+              longitude: longitude,
+              latitude: latitude,
             },
           });
         }
@@ -75,20 +74,24 @@ export default class CustomActions extends Component {
   //Upload images to firebase:
 
   uploadImageFetch = async (uri) => {
-    const blob = await new Promise((resolve, reject) => {
-      const xhr = new XMLHttpRequest();
-      xhr.onload = function () {
-        resolve(xhr.response);
-      };
-      xhr.onerror = function (e) {
-        console.log(e);
-        reject(new TypeError("Network request failed"));
-      };
-      xhr.responseType = "blob";
-      xhr.open("GET", uri, true);
-      xhr.send(null);
-    });
-
+    try{
+    // To convert image to blob format
+      const blob = await new Promise((resolve, reject) => {
+        // To create new XMLHttp request
+        const xhr = new XMLHttpRequest();
+        xhr.onload = function () {
+          resolve(xhr.response);
+        };
+        xhr.onerror = function (error) {
+          console.log(error);
+          reject(new TypeError('Network Request Failed'));
+        };
+        // This opens connection to receive image data and reponds as blob
+        xhr.responseType = 'blob';
+        xhr.open('GET', uri, true);
+        xhr.send(null);
+      });
+    
     const imageNameBefore = uri.split("/");
     const imageName = imageNameBefore[imageNameBefore.length - 1];
     const ref = firebase.storage().ref().child(`images/${imageName}`);
@@ -96,6 +99,9 @@ export default class CustomActions extends Component {
     blob.close();
 
     return await snapshot.ref.getDownloadURL();
+    } catch (error) {
+      console.log(error.message);
+    }
   };
 
   // function that handles each communication feature
@@ -107,7 +113,7 @@ export default class CustomActions extends Component {
       "Cancel",
     ];
     const cancelButtonIndex = options.length - 1;
-    this.context.ActionSheet().showActionSheetWithOptions(
+    this.context.actionSheet().showActionSheetWithOptions(
       {
         options,
         cancelButtonIndex,
@@ -133,7 +139,7 @@ export default class CustomActions extends Component {
     return (
       <div>
         <TouchableHighlight
-          onPress={this.onActionPress.bind(this)}
+          onPress={this.onActionPress}
           style={[styles.container]}
           underlayColor="white"
         >
@@ -169,6 +175,6 @@ const styles = StyleSheet.create({
 });
 
 CustomActions.contextTypes = {
-  ActionSheet: PropTypes.func,
+  actionSheet: PropTypes.func,
 };
 
