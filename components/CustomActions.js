@@ -1,25 +1,29 @@
 import React, { Component } from 'react';
 import PropTypes from "prop-types";
-import { TouchableHighlight, Image, Button, View, Text, StyleSheet } from 'react-native';
+import { TouchableOpacity, View, Text, StyleSheet } from 'react-native';
 import firebase from "firebase";
-import "firebase/firestore";
+import firestore from "firebase";
 import * as Permissions from "expo-permissions";
 import * as ImagePicker from "expo-image-picker";
 import * as Location from "expo-location";
-import MapView from "react-native-maps";
+import { Camera } from "expo-camera";
 
 
 export default class CustomActions extends Component {
-
-  // Let the user pick an image from the device's image library:
+  // Lets the user pick an image from the device's image library
   pickImage = async () => {
     const { status } = await Permissions.askAsync(Permissions.CAMERA_ROLL);
+
     try {
       if (status === "granted") {
         const result = await ImagePicker.launchImageLibraryAsync({
           mediaTypes: "Images",
         }).catch((error) => console.log(error));
+
         if (!result.cancelled) {
+          this.setState({
+            image: result,
+          });
           const imageUrl = await this.uploadImageFetch(result.uri);
           this.props.onSend({ image: imageUrl });
         }
@@ -29,19 +33,18 @@ export default class CustomActions extends Component {
     }
   };
 
-  // Let the user take a photo with device's camera:
+  // Lets the user take a photo with device's camera
   takePhoto = async () => {
-    const { status } = await Permissions.askAsync(
-      Permissions.CAMERA_ROLL,
-      Permissions.CAMERA
-    );
+    const { status } = await Permissions.askAsync(Permissions.CAMERA_ROLL, Permissions.CAMERA);
+
     try {
       if (status === "granted") {
-        const result = await ImagePicker.launchCameraAsync().catch((error) =>
-          console.log(error)
-        );
+        const result = await ImagePicker.launchCameraAsync().catch((error) => console.log(error));
 
         if (!result.cancelled) {
+          this.setState({
+            image: result,
+          });
           const imageUrl = await this.uploadImageFetch(result.uri);
           this.props.onSend({ image: imageUrl });
         }
@@ -51,32 +54,34 @@ export default class CustomActions extends Component {
     }
   };
 
-  //get the location of the user by using GPS:
+
+  // Get the location of the user by using GPS
   getLocation = async () => {
+    const { status } = await Location.requestForegroundPermissionsAsync();
+    //Permissions.askAsync(Permissions.LOCATION); ->deprecated
     try {
-      const { status } = await Location.requestForegroundPermissionsAsync();
-      //Permissions.askAsync(Permissions.LOCATION); ->deprecated
       if (status === "granted") {
-        const result = await Location.getCurrentPositionAsync({}).catch(
-          (error) => console.log(error)
-        );
-        const longitude = JSON.stringify(result.coords.longitude);
-        const latitude = JSON.stringify(result.coords.latitude);
+        const result = await Location.getCurrentPositionAsync({}).catch((error) => console.log(error));
+        const longitude = JSON.stringify(location.coords.longitude);
+        const latitude = JSON.stringify(location.coords.latitude);
         if (result) {
+          this.setState({
+            location: result,
+          });
           this.props.onSend({
             location: {
-              longitude: longitude,
-              latitude: latitude,
+              longitude,
+              latitude,
             },
           });
         }
       }
     } catch (error) {
-      console.log(error.message);
+      console.error(error);
     }
   };
 
-  //Upload images to firebase:
+  // Upload the images to firebase
   uploadImageFetch = async (uri) => {
     const blob = await new Promise((resolve, reject) => {
       const xhr = new XMLHttpRequest();
@@ -94,19 +99,20 @@ export default class CustomActions extends Component {
 
     const imageNameBefore = uri.split("/");
     const imageName = imageNameBefore[imageNameBefore.length - 1];
+
     const ref = firebase.storage().ref().child(`images/${imageName}`);
+
     const snapshot = await ref.put(blob);
+
     blob.close();
 
     return await snapshot.ref.getDownloadURL();
   };
 
-
-  // function that handles each communication feature
   onActionPress = () => {
     const options = [
       "Choose From Library",
-      "Take Picture",
+      "Take a Picture",
       "Send Location",
       "Cancel",
     ];
@@ -127,7 +133,6 @@ export default class CustomActions extends Component {
           case 2:
             console.log("user wants to get their location");
             return this.getLocation();
-          default:
         }
       }
     );
@@ -136,15 +141,14 @@ export default class CustomActions extends Component {
   render() {
     return (
       <div>
-        <TouchableHighlight
+        <TouchableOpacity
           onPress={this.onActionPress}
           style={[styles.container]}
-          underlayColor="white"
         >
           <View style={[styles.wrapper, this.props.wrapperStyle]}>
             <Text style={[styles.iconText, this.props.iconTextStyle]}>+</Text>
           </View>
-        </TouchableHighlight>
+        </TouchableOpacity>
       </div>
     );
   }

@@ -1,8 +1,6 @@
 import React from "react";
 import firebase from "firebase";
 import "firebase/firestore";
-import * as Permissions from "expo-permissions";
-import * as ImagePicker from "expo-image-picker";
 
 // Import the functions you need from the SDKs you need
 import { initializeApp } from "firebase/app";
@@ -13,7 +11,8 @@ import { KeyboardAvoidingView, View, Text, Platform, TouchableOpacity } from "re
 import { GiftedChat, Bubble, InputToolbar } from "react-native-gifted-chat";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import NetInfo from "@react-native-community/netinfo";
-import MapView from 'react-native-maps';
+import MapView, { PROVIDER_GOOGLE } from "react-native-maps";
+
 import CustomActions from './CustomActions';
 
 
@@ -219,6 +218,7 @@ export default class Chat extends React.Component {
             latitudeDelta: 0.0922,
             longitudeDelta: 0.0421,
           }}
+          provider={PROVIDER_GOOGLE}
         />
       );
     }
@@ -232,8 +232,9 @@ export default class Chat extends React.Component {
     let color = this.props.route.params.color;
 
     return (
-      <View style={{ flex: 1, backgroundColor: color, color: "#000" }}>
+      <View style={{ flex: 1, justifyContent: 'flex-end', backgroundColor: color, color: "#000" }}>
         <GiftedChat
+          style={{ width: 100, height: 20,  }}
           renderBubble={this.renderBubble.bind(this)}
           renderInputToolbar={this.renderInputToolbar.bind(this)}
           renderActions={this.renderCustomActions}
