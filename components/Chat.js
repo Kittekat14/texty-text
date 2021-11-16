@@ -222,7 +222,6 @@ export default class Chat extends React.Component {
         />
       );
     }
-    return null;
   }
 
 
@@ -237,8 +236,8 @@ export default class Chat extends React.Component {
         <GiftedChat
           renderBubble={this.renderBubble.bind(this)}
           renderInputToolbar={this.renderInputToolbar.bind(this)}
-          renderActions={this.renderCustomActions.bind(this)} // button inside chat input field that opens up an ActionSheet
-          renderCustomView={this.renderCustomView.bind(this)}
+          renderActions={this.renderCustomActions}
+          renderCustomView={this.renderCustomView}
           messages={this.state.messages}
           onSend={(messages) => this.onSend(messages)}
           user={{

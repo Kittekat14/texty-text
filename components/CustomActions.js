@@ -1,20 +1,23 @@
 import React, { Component } from 'react';
 import PropTypes from "prop-types";
 import { TouchableHighlight, Image, Button, View, Text, StyleSheet } from 'react-native';
+import firebase from "firebase";
+import "firebase/firestore";
 import * as Permissions from "expo-permissions";
 import * as ImagePicker from "expo-image-picker";
 import * as Location from "expo-location";
-import firebase from "firebase";
+import MapView from "react-native-maps";
+
 
 export default class CustomActions extends Component {
-
+  
   // Let the user pick an image from the device's image library:
   pickImage = async () => {
-    const { status } = await Permissions.askAsync(Permissions.MEDIA_LIBRARY);
+    const { status } = await Permissions.askAsync(Permissions.CAMERA_ROLL);
     try {
       if (status === "granted") {
         const result = await ImagePicker.launchImageLibraryAsync({
-          mediaTypes: "Images",  //only images
+          mediaTypes: "Images",
         }).catch((error) => console.log(error));
         if (!result.cancelled) {
           const imageUrl = await this.uploadImageFetch(result.uri);
@@ -29,12 +32,14 @@ export default class CustomActions extends Component {
   // Let the user take a photo with device's camera:
   takePhoto = async () => {
     const { status } = await Permissions.askAsync(
-      Permissions.MEDIA_LIBRARY,
+      Permissions.CAMERA_ROLL,
       Permissions.CAMERA
     );
     try {
       if (status === "granted") {
-        const result = await ImagePicker.launchCameraAsync().catch((error) => console.log(error));
+        const result = await ImagePicker.launchCameraAsync().catch((error) =>
+          console.log(error)
+        );
 
         if (!result.cancelled) {
           const imageUrl = await this.uploadImageFetch(result.uri);
@@ -49,7 +54,7 @@ export default class CustomActions extends Component {
   //get the location of the user by using GPS:
   getLocation = async () => {
     try {
-      const { status } = await Location.requestForegroundPermissionsAsync(); 
+      const { status } = await Location.requestForegroundPermissionsAsync();
       //Permissions.askAsync(Permissions.LOCATION); ->deprecated
       if (status === "granted") {
         const result = await Location.getCurrentPositionAsync({}).catch(
@@ -72,26 +77,21 @@ export default class CustomActions extends Component {
   };
 
   //Upload images to firebase:
-
   uploadImageFetch = async (uri) => {
-    try{
-    // To convert image to blob format
-      const blob = await new Promise((resolve, reject) => {
-        // To create new XMLHttp request
-        const xhr = new XMLHttpRequest();
-        xhr.onload = function () {
-          resolve(xhr.response);
-        };
-        xhr.onerror = function (error) {
-          console.log(error);
-          reject(new TypeError('Network Request Failed'));
-        };
-        // This opens connection to receive image data and reponds as blob
-        xhr.responseType = 'blob';
-        xhr.open('GET', uri, true);
-        xhr.send(null);
-      });
-    
+    const blob = await new Promise((resolve, reject) => {
+      const xhr = new XMLHttpRequest();
+      xhr.onload = function () {
+        resolve(xhr.response);
+      };
+      xhr.onerror = function (e) {
+        console.log(e);
+        reject(new TypeError("Network request failed"));
+      };
+      xhr.responseType = "blob";
+      xhr.open("GET", uri, true);
+      xhr.send(null);
+    });
+
     const imageNameBefore = uri.split("/");
     const imageName = imageNameBefore[imageNameBefore.length - 1];
     const ref = firebase.storage().ref().child(`images/${imageName}`);
@@ -99,10 +99,8 @@ export default class CustomActions extends Component {
     blob.close();
 
     return await snapshot.ref.getDownloadURL();
-    } catch (error) {
-      console.log(error.message);
-    }
   };
+
 
   // function that handles each communication feature
   onActionPress = () => {
@@ -122,7 +120,7 @@ export default class CustomActions extends Component {
         switch (buttonIndex) {
           case 0:
             console.log("user wants to pick an image");
-            return this.imagePicker();
+            return this.pickImage();
           case 1:
             console.log("user wants to take a photo");
             return this.takePhoto();
@@ -131,7 +129,7 @@ export default class CustomActions extends Component {
             return this.getLocation();
           default:
         }
-      },
+      }
     );
   };
 
