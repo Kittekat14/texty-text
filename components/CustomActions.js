@@ -10,7 +10,7 @@ import MapView from "react-native-maps";
 
 
 export default class CustomActions extends Component {
-  
+
   // Let the user pick an image from the device's image library:
   pickImage = async () => {
     const { status } = await Permissions.askAsync(Permissions.CAMERA_ROLL);
@@ -158,13 +158,13 @@ const styles = StyleSheet.create({
     marginBottom: 10,
   },
   wrapper: {
-    borderRadius: 13,
-    borderColor: "#b2b2b2",
-    borderWidth: 2,
+    borderRadius: 50 / 2,
+    borderColor: "#5b5b5b",
+    borderWidth: 1,
     flex: 1,
   },
   iconText: {
-    color: "#b2b2b2",
+    color: "#5b5b5b",
     fontWeight: "bold",
     fontSize: 16,
     backgroundColor: "transparent",
