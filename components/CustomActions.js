@@ -35,11 +35,16 @@ export default class CustomActions extends Component {
 
   // Lets the user take a photo with device's camera
   takePhoto = async () => {
-    const { status } = await Permissions.askAsync(Permissions.CAMERA_ROLL, Permissions.CAMERA);
+    const { status } = await Permissions.askAsync(
+      Permissions.CAMERA_ROLL,
+      Permissions.CAMERA
+    );
 
     try {
       if (status === "granted") {
-        const result = await ImagePicker.launchCameraAsync().catch((error) => console.log(error));
+        const result = await ImagePicker.launchCameraAsync().catch((error) =>
+          console.log(error)
+        );
 
         if (!result.cancelled) {
           this.setState({
@@ -54,14 +59,15 @@ export default class CustomActions extends Component {
     }
   };
 
-
   // Get the location of the user by using GPS
   getLocation = async () => {
     const { status } = await Location.requestForegroundPermissionsAsync();
     //Permissions.askAsync(Permissions.LOCATION); ->deprecated
     try {
       if (status === "granted") {
-        const result = await Location.getCurrentPositionAsync({}).catch((error) => console.log(error));
+        const result = await Location.getCurrentPositionAsync({}).catch(
+          (error) => console.log(error)
+        );
         const longitude = JSON.stringify(location.coords.longitude);
         const latitude = JSON.stringify(location.coords.latitude);
         if (result) {
@@ -76,34 +82,6 @@ export default class CustomActions extends Component {
     } catch (error) {
       console.error(error);
     }
-  };
-
-  // Upload the images to firebase
-  uploadImageFetch = async (uri) => {
-    const blob = await new Promise((resolve, reject) => {
-      const xhr = new XMLHttpRequest();
-      xhr.onload = function () {
-        resolve(xhr.response);
-      };
-      xhr.onerror = function (e) {
-        console.log(e);
-        reject(new TypeError("Network request failed"));
-      };
-      xhr.responseType = "blob";
-      xhr.open("GET", uri, true);
-      xhr.send(null);
-    });
-
-    const imageNameBefore = uri.split("/");
-    const imageName = imageNameBefore[imageNameBefore.length - 1];
-
-    const ref = firebase.storage().ref().child(`images/${imageName}`);
-
-    const snapshot = await ref.put(blob);
-
-    blob.close();
-
-    return await snapshot.ref.getDownloadURL();
   };
 
   onActionPress = () => {
@@ -135,13 +113,38 @@ export default class CustomActions extends Component {
     );
   };
 
+  // Upload the images to firebase
+  uploadImageFetch = async (uri) => {
+    const blob = await new Promise((resolve, reject) => {
+      const xhr = new XMLHttpRequest();
+      xhr.onload = function () {
+        resolve(xhr.response);
+      };
+      xhr.onerror = function (e) {
+        console.log(e);
+        reject(new TypeError("Network request failed"));
+      };
+      xhr.responseType = "blob";
+      xhr.open("GET", uri, true);
+      xhr.send(null);
+    });
+
+    const imageNameBefore = uri.split("/");
+    const imageName = imageNameBefore[imageNameBefore.length - 1];
+
+    const ref = firebase.storage().ref().child(`images/${imageName}`);
+
+    const snapshot = await ref.put(blob);
+
+    blob.close();
+
+    return await snapshot.ref.getDownloadURL();
+  };
+
   render() {
     return (
       <View>
-        <Pressable
-          onPress={this.onActionPress}
-          style={styles.container}
-        >
+        <Pressable onPress={this.onActionPress} style={styles.container}>
           <View style={[styles.wrapper, this.props.wrapperStyle]}>
             <Text style={[styles.iconText, this.props.iconTextStyle]}>+</Text>
           </View>
