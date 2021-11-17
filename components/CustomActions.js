@@ -140,7 +140,7 @@ export default class CustomActions extends Component {
 
   render() {
     return (
-      <div>
+      <View>
         <Pressable
           onPress={this.onActionPress}
           style={styles.container}
@@ -149,7 +149,7 @@ export default class CustomActions extends Component {
             <Text style={[styles.iconText, this.props.iconTextStyle]}>+</Text>
           </View>
         </Pressable>
-      </div>
+      </View>
     );
   }
 }
