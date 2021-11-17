@@ -147,8 +147,10 @@ export default class CustomActions extends Component {
         <Pressable
           onPress={this.onActionPress}
           style={styles.container}
+          accessible={true}
           accessibilityLabel="Button that shows action options"
           accessibilityHint="Users can send an image or their geolocation"
+          accessibilityRole="button"
         >
           <View style={[styles.wrapper, this.props.wrapperStyle]}>
             <Text style={[styles.iconText, this.props.iconTextStyle]}>+</Text>
