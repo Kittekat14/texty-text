@@ -41,7 +41,8 @@ export default class Chat extends React.Component {
       image: null,
       location: null,
     };
-
+    this.addMessage = this.addMessage.bind(this);
+    
     // Initialize Firebase
     if (!firebase.apps.length) {
       firebase.initializeApp(firebaseConfig);
