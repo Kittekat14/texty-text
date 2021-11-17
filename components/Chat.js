@@ -39,7 +39,7 @@ export default class Chat extends React.Component {
       },
       isConnected: false,
       image: null,
-      location: null
+      location: null,
     };
 
     // Initialize Firebase
@@ -218,12 +218,11 @@ export default class Chat extends React.Component {
             latitudeDelta: 0.0922,
             longitudeDelta: 0.0421,
           }}
-          provider={PROVIDER_GOOGLE}
         />
       );
     }
+    return null;
   }
-
 
   render() {
     //get textInput from Start.js and display it in Header
@@ -232,9 +231,16 @@ export default class Chat extends React.Component {
     let color = this.props.route.params.color;
 
     return (
-      <View style={{ flex: 1, justifyContent: 'flex-end', backgroundColor: color, color: "#000" }}>
+      <View
+        style={{
+          flex: 1,
+          justifyContent: "flex-end",
+          backgroundColor: color,
+          color: "#000",
+        }}
+      >
         <GiftedChat
-          style={{ width: 100, height: 20,  }}
+          style={{ width: 100, height: 20 }}
           renderBubble={this.renderBubble.bind(this)}
           renderInputToolbar={this.renderInputToolbar.bind(this)}
           renderActions={this.renderCustomActions}
