@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import PropTypes from "prop-types";
-import { TouchableOpacity, View, Text, StyleSheet } from 'react-native';
+import { Pressable, View, Text, StyleSheet } from 'react-native';
 import firebase from "firebase";
 import firestore from "firebase";
 import * as Permissions from "expo-permissions";
@@ -141,14 +141,14 @@ export default class CustomActions extends Component {
   render() {
     return (
       <div>
-        <TouchableOpacity
+        <Pressable
           onPress={this.onActionPress}
-          style={[styles.container]}
+          style={styles.container}
         >
           <View style={[styles.wrapper, this.props.wrapperStyle]}>
             <Text style={[styles.iconText, this.props.iconTextStyle]}>+</Text>
           </View>
-        </TouchableOpacity>
+        </Pressable>
       </div>
     );
   }
@@ -162,7 +162,7 @@ const styles = StyleSheet.create({
     marginBottom: 10,
   },
   wrapper: {
-    borderRadius: 50 / 2,
+    borderRadius: 13,
     borderColor: "#5b5b5b",
     borderWidth: 1,
     flex: 1,
