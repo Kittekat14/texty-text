@@ -15,6 +15,16 @@ import MapView, { PROVIDER_GOOGLE } from "react-native-maps";
 
 import CustomActions from './CustomActions';
 
+import { LogBox } from "react-native";
+import _ from "lodash";
+
+LogBox.ignoreWarnings(["Setting a timer"]);
+const _console = _.clone(console);
+console.warn = (message) => {
+  if (message.indexOf("Setting a timer") <= -1) {
+    _console.warn(message);
+  }
+};
 
 // Your web app's Firebase configuration
 const firebaseConfig = {
