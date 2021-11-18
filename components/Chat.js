@@ -1,24 +1,20 @@
 import React from "react";
+
 import firebase from "firebase";
 import "firebase/firestore";
 
-// Import the functions you need from the SDKs you need
-import { initializeApp } from "firebase/app";
-// TODO: Add SDKs for Firebase products that you want to use
-// https://firebase.google.com/docs/web/setup#available-libraries
-
 import { KeyboardAvoidingView, View, Text, Platform, TouchableOpacity } from "react-native";
 import { GiftedChat, Bubble, InputToolbar } from "react-native-gifted-chat";
+import MapView from "react-native-maps";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import NetInfo from "@react-native-community/netinfo";
-import MapView, { PROVIDER_GOOGLE } from "react-native-maps";
 
 import CustomActions from './CustomActions';
 
-import { LogBox } from "react-native";
+import { YellowBox } from "react-native";
 import _ from "lodash";
 
-LogBox.ignoreWarnings(["Setting a timer"]);
+YellowBox.ignoreWarnings(["Setting a timer"]);
 const _console = _.clone(console);
 console.warn = (message) => {
   if (message.indexOf("Setting a timer") <= -1) {
@@ -51,7 +47,6 @@ export default class Chat extends React.Component {
       image: null,
       location: null,
     };
-    this.addMessage = this.addMessage.bind(this);
 
     // Initialize Firebase
     if (!firebase.apps.length) {
@@ -59,6 +54,7 @@ export default class Chat extends React.Component {
     }
     // reference to messages collection in the constructor of my class component
     this.referenceMessages = firebase.firestore().collection("messages");
+    this.referenceMessageUser = null;
   }
 
   //gets messages from AsyncStorage
@@ -122,6 +118,13 @@ export default class Chat extends React.Component {
               },
               messages: [],
             });
+
+            //referencing messages of current user
+            // this.referenceMessageUser = firebase
+            //   .firestore()
+            //   .collection("messages")
+            //   .where("uid", "==", this.state.uid);
+
             this.saveMessages();
             // reference to messages collection in firebase
             this.unsubscribeChatUser = this.referenceMessages
@@ -134,12 +137,29 @@ export default class Chat extends React.Component {
         this.getMessages(); // read messages is still possible if offline
       }
     });
+
+    const systemMsg = {
+      _id: `system- ${ Math.floor(Math.random() * 1000) }`,
+      text: `${text ? text : "Anonymous"} joined the conversation 👋`,
+      createdAt: new Date(),
+      system: true,
+    };
+    this.referenceMessages.add(systemMsg);
   }
 
   componentWillUnmount() {
+    const { text } = this.props.route.params;
     // stop listening to authentication and collection updates
-    // this.authUnsubscribe();
-    // this.unsubscribeChatUser();
+    this.authUnsubscribe();
+    this.unsubscribeChatUser();
+
+    const systemMsg = {
+      _id: `system-${Math.floor(Math.random() * 1000)}`,
+      text: `${text ? text : "Anonymous"} left the conversation 👋`,
+      createdAt: new Date(),
+      system: true,
+    };
+    this.referenceMessages.add(systemMsg);
   }
 
   //adding and retrieving messages from/to collection
