@@ -3,8 +3,13 @@ import React from "react";
 import firebase from "firebase";
 import "firebase/firestore";
 
-import { KeyboardAvoidingView, View, Text, Platform, TouchableOpacity } from "react-native";
-import { GiftedChat, Bubble, InputToolbar } from "react-native-gifted-chat";
+import { KeyboardAvoidingView, View, Text, Icon, Platform, TouchableOpacity } from "react-native";
+import {
+  GiftedChat,
+  Bubble,
+  InputToolbar,
+  SystemMessage,
+} from "react-native-gifted-chat";
 import MapView from "react-native-maps";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import NetInfo from "@react-native-community/netinfo";
@@ -13,6 +18,7 @@ import CustomActions from './CustomActions';
 
 import { YellowBox } from "react-native";
 import _ from "lodash";
+import { CurrentRenderContext } from "@react-navigation/native";
 
 YellowBox.ignoreWarnings(["Setting a timer"]);
 const _console = _.clone(console);
@@ -120,10 +126,10 @@ export default class Chat extends React.Component {
             });
 
             //referencing messages of current user
-            // this.referenceMessageUser = firebase
-            //   .firestore()
-            //   .collection("messages")
-            //   .where("uid", "==", this.state.uid);
+            this.referenceMessageUser = firebase
+              .firestore()
+              .collection("messages")
+              .where("uid", "==", this.state.uid);
 
             this.saveMessages();
             // reference to messages collection in firebase
@@ -139,10 +145,10 @@ export default class Chat extends React.Component {
     });
 
     const systemMsg = {
-      _id: `system- ${ Math.floor(Math.random() * 1000) }`,
+      _id: `system- ${Math.floor(Math.random() * 100000)}`,
       text: `${text ? text : "Anonymous"} joined the conversation 👋`,
       createdAt: new Date(),
-      system: true,
+      system: true
     };
     this.referenceMessages.add(systemMsg);
   }
@@ -154,10 +160,10 @@ export default class Chat extends React.Component {
     this.unsubscribeChatUser();
 
     const systemMsg = {
-      _id: `system-${Math.floor(Math.random() * 1000)}`,
+      _id: `system-${Math.floor(Math.random() * 100000)}`,
       text: `${text ? text : "Anonymous"} left the conversation 👋`,
       createdAt: new Date(),
-      system: true,
+      system: true
     };
     this.referenceMessages.add(systemMsg);
   }
@@ -209,6 +215,14 @@ export default class Chat extends React.Component {
     );
   }
 
+  renderSystemMsg(props) {
+    return (
+    <SystemMessage
+    {...props} 
+    textStyle={{ color: 'grey', fontSize: 14}} 
+    wrapperStyle={{ borderWidth: 1, borderColor: 'grey', flex: '60%', alignItems: 'center' }} 
+    />);
+  }
   renderInputToolbar(props) {
     if (this.state.isConnected == false) {
     } else {
@@ -258,7 +272,7 @@ export default class Chat extends React.Component {
   render() {
     //get textInput from Start.js and display it in Header
     let text = this.props.route.params.text;
-    this.props.navigation.setOptions({ title: text });
+    //this.props.navigation.setOptions({ title: text });
     let color = this.props.route.params.color;
 
     return (
@@ -276,6 +290,7 @@ export default class Chat extends React.Component {
           renderInputToolbar={this.renderInputToolbar.bind(this)}
           renderActions={this.renderCustomActions}
           renderCustomView={this.renderCustomView}
+          renderSystemMessage={this.renderSystemMsg}
           messages={this.state.messages}
           onSend={(messages) => this.onSend(messages)}
           user={{
@@ -293,3 +308,5 @@ export default class Chat extends React.Component {
     );
   }
 }
+
+
