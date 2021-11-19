@@ -12,12 +12,12 @@ import { Camera } from "expo-camera";
 export default class CustomActions extends Component {
   // Lets the user pick an image from the device's image library
   pickImage = async () => {
-    const { status } = await Permissions.askAsync(Permissions.CAMERA_ROLL);
+    const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync();
 
     try {
       if (status === "granted") {
         const result = await ImagePicker.launchImageLibraryAsync({
-          mediaTypes: "Images",
+          mediaTypes: ImagePicker.MediaTypeOptions.All,
         }).catch((error) => console.log(error));
 
         if (!result.cancelled) {
@@ -25,7 +25,7 @@ export default class CustomActions extends Component {
             image: result,
           });
           const imageUrl = await this.uploadImageFetch(result.uri);
-          this.props.onSend({ image: imageUrl });
+          this.props.addMessage({ image: imageUrl });
         }
       }
     } catch (error) {
@@ -35,10 +35,7 @@ export default class CustomActions extends Component {
 
   // Lets the user take a photo with device's camera
   takePhoto = async () => {
-    const { status } = await Permissions.askAsync(
-      Permissions.CAMERA_ROLL,
-      Permissions.CAMERA
-    );
+    const { status } = await Camera.requestCameraPermissionsAsync();
 
     try {
       if (status === "granted") {
@@ -51,7 +48,7 @@ export default class CustomActions extends Component {
             image: result,
           });
           const imageUrl = await this.uploadImageFetch(result.uri);
-          this.props.onSend({ image: imageUrl });
+          this.props.addMessage({ image: imageUrl });
         }
       }
     } catch (error) {
@@ -71,7 +68,7 @@ export default class CustomActions extends Component {
         const longitude = JSON.stringify(location.coords.longitude);
         const latitude = JSON.stringify(location.coords.latitude);
         if (result) {
-          this.props.onSend({
+          this.props.addMessage({
             location: {
               longitude: longitude,
               latitude: latitude,
@@ -108,6 +105,7 @@ export default class CustomActions extends Component {
           case 2:
             console.log("user wants to get their location");
             return this.getLocation();
+          default:
         }
       }
     );
@@ -128,16 +126,11 @@ export default class CustomActions extends Component {
       xhr.open("GET", uri, true);
       xhr.send(null);
     });
-
     const imageNameBefore = uri.split("/");
     const imageName = imageNameBefore[imageNameBefore.length - 1];
-
     const ref = firebase.storage().ref().child(`images/${imageName}`);
-
     const snapshot = await ref.put(blob);
-
     blob.close();
-
     return await snapshot.ref.getDownloadURL();
   };
 
@@ -146,7 +139,7 @@ export default class CustomActions extends Component {
       <View>
         <Pressable
           onPress={this.onActionPress}
-          style={styles.container}
+          style={[styles.container]}
           accessible={true}
           accessibilityLabel="Button that shows action options"
           accessibilityHint="Users can send an image or their geolocation"

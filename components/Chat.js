@@ -148,7 +148,7 @@ export default class Chat extends React.Component {
       _id: `system- ${Math.floor(Math.random() * 100000)}`,
       text: `${text ? text : "Anonymous"} joined the conversation 👋`,
       createdAt: new Date(),
-      system: true
+      system: true,
     };
     this.referenceMessages.add(systemMsg);
   }
