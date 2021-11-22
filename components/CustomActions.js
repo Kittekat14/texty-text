@@ -31,7 +31,7 @@ export default class CustomActions extends Component {
             image: result,
           });
           const imageUrl = await this.uploadImageFetch(result.uri);
-          this.props.addMessage({ image: imageUrl });
+          this.props.onSend({ image: imageUrl });
         }
       }
     } catch (error) {
@@ -54,7 +54,7 @@ export default class CustomActions extends Component {
             image: result,
           });
           const imageUrl = await this.uploadImageFetch(result.uri);
-          this.props.addMessage({ image: imageUrl });
+          this.props.onSend({ image: imageUrl });
         }
       }
     } catch (error) {
@@ -74,7 +74,7 @@ export default class CustomActions extends Component {
         const longitude = JSON.stringify(location.coords.longitude);
         const latitude = JSON.stringify(location.coords.latitude);
         if (result) {
-          this.props.addMessage({
+          this.props.onSend({
             location: {
               longitude: longitude,
               latitude: latitude,
