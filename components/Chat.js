@@ -50,8 +50,8 @@ export default class Chat extends React.Component {
         avatar: "",
       },
       isConnected: false,
-      image: null,
-      location: null,
+      image: '',
+      location: {},
     };
 
     // Initialize Firebase
@@ -122,14 +122,8 @@ export default class Chat extends React.Component {
                 name: text,
                 avatar: "https://placeimg.com/140/140/any",
               },
-              messages: [],
+              messages: []
             });
-
-            //referencing messages of current user
-            this.referenceMessageUser = firebase
-              .firestore()
-              .collection("messages")
-              .where("uid", "==", this.state.uid);
 
             this.saveMessages();
             // reference to messages collection in firebase
@@ -144,28 +138,32 @@ export default class Chat extends React.Component {
       }
     });
 
-    const systemMsg = {
-      _id: `system- ${Math.floor(Math.random() * 100000)}`,
-      text: `${text ? text : "Anonymous"} joined the conversation 👋`,
-      createdAt: new Date(),
-      system: true,
-    };
-    this.referenceMessages.add(systemMsg);
+    // const systemMsg = {
+    //   _id: `system- ${Math.floor(Math.random() * 100000)}`,
+    //   text: `${text ? text : "Anonymous"} joined the conversation 👋`,
+    //   createdAt: new Date(),
+    //   user: {
+    //     name: text},
+    //   system: true,
+    // };
+    // this.referenceMessages.add(systemMsg);
   }
 
   componentWillUnmount() {
-    const { text } = this.props.route.params;
+    //const { text } = this.props.route.params;
     // stop listening to authentication and collection updates
     this.authUnsubscribe();
     this.unsubscribeChatUser();
 
-    const systemMsg = {
-      _id: `system-${Math.floor(Math.random() * 100000)}`,
-      text: `${text ? text : "Anonymous"} left the conversation 👋`,
-      createdAt: new Date(),
-      system: true
-    };
-    this.referenceMessages.add(systemMsg);
+    // const systemMsg = {
+    //   _id: `system-${Math.floor(Math.random() * 100000)}`,
+    //   text: `${text ? text : "Anonymous"} left the conversation 👋`,
+    //   createdAt: new Date(),
+    //   user: {
+    //     name: text},
+    //   system: true,
+    // };
+    // this.referenceMessages.add(systemMsg);
   }
 
   //adding and retrieving messages from/to collection
@@ -174,21 +172,23 @@ export default class Chat extends React.Component {
     const messages = [];
     // go through each document
     querySnapshot.forEach((doc) => {
-      // get the querysnapshot's data
-      let data = { ...doc.data() };
+      // get the QueryDocumentSnapshot's data
+      const data = doc.data();
       messages.push({
         _id: data._id,
-        text: data.text,
+        text: data.text || "",
         createdAt: data.createdAt.toDate(),
         user: data.user,
-        image: data.image || null,
+        image: data.image || "",
         location: data.location || null,
       });
     });
+
     this.setState({
       messages,
     });
   };
+
   // Comes from my side
   addMessage() {
     const message = this.state.messages[0]; //adding the currently sent message
@@ -198,7 +198,7 @@ export default class Chat extends React.Component {
       text: message.text,
       createdAt: message.createdAt,
       user: message.user,
-      image: message.image || null,
+      image: message.image || "",
       location: message.location || null,
     });
   }
@@ -217,11 +217,17 @@ export default class Chat extends React.Component {
 
   renderSystemMsg(props) {
     return (
-    <SystemMessage
-    {...props} 
-    textStyle={{ color: 'grey', fontSize: 14}} 
-    wrapperStyle={{ borderWidth: 1, borderColor: 'grey', flex: '60%', alignItems: 'center' }} 
-    />);
+      <SystemMessage
+        {...props}
+        textStyle={{ color: "grey", fontSize: 14 }}
+        wrapperStyle={{
+          borderWidth: 1,
+          borderColor: "grey",
+          flex: "60%",
+          alignItems: "center",
+        }}
+      />
+    );
   }
   renderInputToolbar(props) {
     if (this.state.isConnected == false) {

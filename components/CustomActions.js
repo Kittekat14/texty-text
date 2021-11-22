@@ -22,9 +22,7 @@ export default class CustomActions extends Component {
         }).catch((error) => console.log(error));
 
         if (!result.cancelled) {
-          this.setState({
-            image: result,
-          });
+          
           const imageUrl = await this.uploadImageFetch(result.uri);
           this.props.onSend({ image: imageUrl });
         }
@@ -45,9 +43,7 @@ export default class CustomActions extends Component {
         );
 
         if (!result.cancelled) {
-          this.setState({
-            image: result,
-          });
+          
           const imageUrl = await this.uploadImageFetch(result.uri);
           this.props.onSend({ image: imageUrl });
         }
