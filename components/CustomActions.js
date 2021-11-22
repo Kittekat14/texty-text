@@ -10,12 +10,7 @@ import { Camera } from "expo-camera";
 
 
 export default class CustomActions extends Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      location: null,
-    };
-  }
+  
   // Lets the user pick an image from the device's image library
   pickImage = async () => {
     const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync();
