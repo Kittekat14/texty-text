@@ -53,8 +53,9 @@ export default class Chat extends React.Component {
     }
     // reference to messages collection in the constructor of my class component
     this.referenceMessages = firebase.firestore().collection("messages");
+    this.referenceMessagesUsers = null;
 
-    //ignore warnings
+    // Ignore warnings
     // YellowBox.ignoreWarnings(["Setting a timer"]);
     // const _console = _.clone(console);
     // console.warn = (message) => {
@@ -62,15 +63,15 @@ export default class Chat extends React.Component {
     //     _console.warn(message);
     //   }
     // };
+    // Ignore log notification by message
     // LogBox.ignoreLogs([
     //   "Setting a timer",
     //   "Warning: ...",
     //   "undefined",
     //   "Animated.event now requires a second argument for options",
     // ]);
-    
-    //LogBox.ignoreLogs(['Warning: ...']); // Ignore log notification by message
-    LogBox.ignoreAllLogs();//Ignore all log notifications
+
+    LogBox.ignoreAllLogs(); //Ignore all log notifications
   }
 
   //gets messages from AsyncStorage
@@ -108,22 +109,7 @@ export default class Chat extends React.Component {
     }
   }
 
-  addMessage() {
-    const message = this.state.messages[0];
-    this.referenceMessages.add({
-      _id: message._id,
-      uid: this.state.uid,
-      createdAt: message.createdAt,
-      text: message.text || "",
-      user: message.user,
-      image: message.image || "",
-      location: message.location || null,
-    });
-  }
-
   componentDidMount() {
-    this.getMessages();
-
     //get name from start screen and change title of page to user's name
     let text = this.props.route.params.text;
     //get the name from the home screen and change the title of the page to the name of the user
@@ -149,29 +135,36 @@ export default class Chat extends React.Component {
               uid: user.uid,
               user: {
                 _id: user.uid,
-                name: text,
+                name: this.props.route.params.text,
                 avatar: "https://placeimg.com/140/140/any",
               },
               messages: [],
             });
+
+            //add messages to user
+            this.referenceMessagesUsers = firebase
+              .firestore()
+              .collection("messages")
+              .where("uid", "==", this.state.uid);
+
             // Listening for collection changes for current user
-            this.unsubscribeChatUser = this.referenceMessages
+            this.unsubscribe = this.referenceMessages
               .orderBy("createdAt", "desc")
               .onSnapshot(this.onCollectionUpdate);
           });
+      //saving messages locally to asyncStorage
+        this.saveMessages();
       } else {
         this.setState({ isConnected: false });
+        //obtaining messages from asyncStorage
         this.getMessages();
-        Alert.alert(
-          "No internet connection detected | Unable to send messages"
-        );
       }
     });
   }
 
   componentWillUnmount() {
     // stop listening to authentication
-    this.unsubscribeChatUser();
+    this.unsubscribe();
     this.authUnsubscribe();
   }
 
@@ -181,7 +174,6 @@ export default class Chat extends React.Component {
     querySnapshot.forEach((doc) => {
       // Gets the QueryDocumentSnapshot's data
       var data = doc.data();
-      if (data._id) {
         messages.push({
           _id: data._id,
           text: data.text || "",
@@ -191,17 +183,15 @@ export default class Chat extends React.Component {
             name: data.user.name,
             avatar: data.user.avatar,
           },
-          image: data.image,
-          location: data.location,
+          image: data.image || null,
+          location: data.location || null,
         });
-      }
     });
 
     this.setState({
       messages,
     });
   };
-
 
   // Sends the written text to the chat screen
   onSend(messages = []) {
@@ -214,6 +204,18 @@ export default class Chat extends React.Component {
         this.saveMessages();
       }
     );
+  }
+
+  addMessage() {
+    const message = this.state.messages[0];
+    this.referenceMessages.add({
+      _id: message._id,
+      createdAt: message.createdAt,
+      text: message.text || "",
+      user: message.user,
+      image: message.image || "",
+      location: message.location || null,
+    });
   }
 
   renderInputToolbar(props) {
