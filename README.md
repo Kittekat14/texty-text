@@ -8,5 +8,12 @@ Features (so far):
 - User can navigate between Home Screen and Chat Screen
 - User can choose a background color for their chat screen from a selection of colors
 
+Platform used during Development: Android 11.0
+- React version
+- React Native version
+- Nodejs version
+- react-native-gifted-chat version
+
+
 
 
