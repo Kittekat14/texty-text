@@ -214,20 +214,20 @@ export default class Chat extends React.Component {
     );
   };
 
-  renderSystemMsg(props) {
-    return (
-      <SystemMessage
-        {...props}
-        textStyle={{ color: "grey", fontSize: 14 }}
-        wrapperStyle={{
-          borderWidth: 1,
-          borderColor: "grey",
-          flex: "60%",
-          alignItems: "center",
-        }}
-      />
-    );
-  }
+  // renderSystemMsg(props) {
+  //   return (
+  //     <SystemMessage
+  //       {...props}
+  //       textStyle={{ color: "grey", fontSize: 14 }}
+  //       wrapperStyle={{
+  //         borderWidth: 1,
+  //         borderColor: "grey",
+  //         flex: "60%",
+  //         alignItems: "center",
+  //       }}
+  //     />
+  //   );
+  // }
   renderInputToolbar(props) {
     if (this.state.isConnected == false) {
     } else {
