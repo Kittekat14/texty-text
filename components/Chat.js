@@ -127,7 +127,7 @@ export default class Chat extends React.Component {
 
             this.saveMessages();
             // reference to messages collection in firebase
-            this.unsubscribeChatUser = this.referenceMessages
+            this.unsubscribe = this.referenceMessages
               .orderBy("createdAt", "desc")
               .onSnapshot(this.onCollectionUpdate);
           });
@@ -152,8 +152,8 @@ export default class Chat extends React.Component {
   componentWillUnmount() {
     //const { text } = this.props.route.params;
     // stop listening to authentication and collection updates
+    this.unsubscribe();
     this.authUnsubscribe();
-    this.unsubscribeChatUser();
 
     // const systemMsg = {
     //   _id: `system-${Math.floor(Math.random() * 100000)}`,
@@ -183,9 +183,8 @@ export default class Chat extends React.Component {
         location: data.location || null,
       });
     });
-
     this.setState({
-      messages,
+      messages: messages,
     });
   };
 
@@ -203,7 +202,7 @@ export default class Chat extends React.Component {
     });
   }
 
-  async onSend(messages = []) {
+  onSend(messages = []) {
     this.setState(
       (previousState) => ({
         messages: GiftedChat.append(previousState.messages, messages),
