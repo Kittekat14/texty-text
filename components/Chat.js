@@ -149,7 +149,7 @@ export default class Chat extends React.Component {
 
             // Listening for collection changes for current user
             this.unsubscribe = this.referenceMessages
-              .orderBy("createdAt", "desc")
+              // .orderBy("createdAt", "desc")
               .onSnapshot(this.onCollectionUpdate);
           });
       //saving messages locally to asyncStorage
@@ -209,6 +209,7 @@ export default class Chat extends React.Component {
   addMessage() {
     const message = this.state.messages[0];
     this.referenceMessages.add({
+      uid: this.state.uid,
       _id: message._id,
       createdAt: message.createdAt,
       text: message.text || "",
@@ -289,8 +290,8 @@ export default class Chat extends React.Component {
           messages={this.state.messages}
           onSend={(messages) => this.onSend(messages)}
           user={{
-            _id: this.state.uid,
-            name: this.props.route.params.text,
+            _id: this.state.user._id,
+            name: this.state.user.name,
             avatar: "https://placeimg.com/140/140/any",
           }}
         />
