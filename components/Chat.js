@@ -289,6 +289,7 @@ export default class Chat extends React.Component {
           renderCustomView={this.renderCustomView}
           messages={this.state.messages}
           onSend={(messages) => this.onSend(messages)}
+          // user coming from database
           user={{
             _id: this.state.user._id,
             name: this.state.user.name,
