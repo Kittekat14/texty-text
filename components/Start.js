@@ -1,5 +1,5 @@
 import React from 'react';
-import { Button, View, Text, TextInput, ImageBackground, StyleSheet, Platform, KeyboardAvoidingView  } from 'react-native';
+import { Button, View, Text, TextInput, ImageBackground, StyleSheet, Platform, KeyboardAvoidingView, LogBox  } from 'react-native';
 
 export default class Start extends React.Component {
  constructor(props) {
@@ -8,6 +8,8 @@ export default class Start extends React.Component {
      text: "",
      background: ""
    };
+
+   LogBox.ignoreAllLogs();
  }
 
  setBgColor = (color) => {

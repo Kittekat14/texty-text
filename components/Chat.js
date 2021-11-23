@@ -1,5 +1,4 @@
 import React from "react";
-
 import firebase from "firebase";
 import "firebase/firestore";
 
@@ -7,7 +6,8 @@ import { KeyboardAvoidingView, View, Platform } from "react-native";
 import {
   GiftedChat,
   Bubble,
-  InputToolbar
+  InputToolbar,
+  Alert
 } from "react-native-gifted-chat";
 import MapView from "react-native-maps";
 import AsyncStorage from "@react-native-async-storage/async-storage";
@@ -16,16 +16,10 @@ import NetInfo from "@react-native-community/netinfo";
 import CustomActions from './CustomActions';
 
 //getting rid of some warnings because of LogBox
-import { YellowBox } from "react-native";
+import { YellowBox, LogBox } from "react-native";
 import _ from "lodash";
 import { CurrentRenderContext } from "@react-navigation/native";
-YellowBox.ignoreWarnings(["Setting a timer"]);
-const _console = _.clone(console);
-console.warn = (message) => {
-  if (message.indexOf("Setting a timer") <= -1) {
-    _console.warn(message);
-  }
-};
+
 
 // Your web app's Firebase configuration
 const firebaseConfig = {
@@ -59,6 +53,24 @@ export default class Chat extends React.Component {
     }
     // reference to messages collection in the constructor of my class component
     this.referenceMessages = firebase.firestore().collection("messages");
+
+    //ignore warnings
+    // YellowBox.ignoreWarnings(["Setting a timer"]);
+    // const _console = _.clone(console);
+    // console.warn = (message) => {
+    //   if (message.indexOf("Setting a timer") <= -1) {
+    //     _console.warn(message);
+    //   }
+    // };
+    // LogBox.ignoreLogs([
+    //   "Setting a timer",
+    //   "Warning: ...",
+    //   "undefined",
+    //   "Animated.event now requires a second argument for options",
+    // ]);
+    
+    //LogBox.ignoreLogs(['Warning: ...']); // Ignore log notification by message
+    LogBox.ignoreAllLogs();//Ignore all log notifications
   }
 
   //gets messages from AsyncStorage
@@ -96,23 +108,43 @@ export default class Chat extends React.Component {
     }
   }
 
+  addMessage() {
+    const message = this.state.messages[0];
+    this.referenceMessages.add({
+      _id: message._id,
+      uid: this.state.uid,
+      createdAt: message.createdAt,
+      text: message.text || "",
+      user: message.user,
+      image: message.image || "",
+      location: message.location || null,
+    });
+  }
+
   componentDidMount() {
     this.getMessages();
-    let text = this.props.route.params.text;
-    this.props.navigation.setOptions({ title: text });
 
-    // check if user is online or offline
+    //get name from start screen and change title of page to user's name
+    let text = this.props.route.params.text;
+    //get the name from the home screen and change the title of the page to the name of the user
+    this.props.navigation.setOptions({ title: text });
+    // To Check user connection
     NetInfo.fetch().then((connection) => {
       if (connection.isConnected) {
         this.setState({ isConnected: true });
-        console.log("ONLINE");
-        //listen to authentication:
+        console.log("online");
+
+        // Referencing to load messages via Firebase
+        this.referenceMessages = firebase.firestore().collection("messages");
+
+        // Listen to authentication events
         this.authUnsubscribe = firebase
           .auth()
           .onAuthStateChanged(async (user) => {
             if (!user) {
               await firebase.auth().signInAnonymously();
             }
+            // Adding user to state
             this.setState({
               uid: user.uid,
               user: {
@@ -122,85 +154,57 @@ export default class Chat extends React.Component {
               },
               messages: [],
             });
-
-            this.saveMessages();
-            // reference to messages collection in firebase
-            this.unsubscribe = this.referenceMessages
+            // Listening for collection changes for current user
+            this.unsubscribeChatUser = this.referenceMessages
               .orderBy("createdAt", "desc")
               .onSnapshot(this.onCollectionUpdate);
           });
       } else {
-        console.log("OFFLINE");
         this.setState({ isConnected: false });
-        this.getMessages(); // read messages is still possible if offline
+        this.getMessages();
+        Alert.alert(
+          "No internet connection detected | Unable to send messages"
+        );
       }
     });
-
-    // const systemMsg = {
-    //   _id: `system- ${Math.floor(Math.random() * 100000)}`,
-    //   text: `${text ? text : "Anonymous"} joined the conversation 👋`,
-    //   createdAt: new Date(),
-    //   user: {
-    //     name: text},
-    //   system: true,
-    // };
-    // this.referenceMessages.add(systemMsg);
   }
 
   componentWillUnmount() {
-    //const { text } = this.props.route.params;
-    // stop listening to authentication and collection updates
-    this.unsubscribe();
+    // stop listening to authentication
+    this.unsubscribeChatUser();
     this.authUnsubscribe();
-
-    // const systemMsg = {
-    //   _id: `system-${Math.floor(Math.random() * 100000)}`,
-    //   text: `${text ? text : "Anonymous"} left the conversation 👋`,
-    //   createdAt: new Date(),
-    //   user: {
-    //     name: text},
-    //   system: true,
-    // };
-    // this.referenceMessages.add(systemMsg);
   }
 
-  //adding and retrieving messages from/to collection
-  // Comes from the database
   onCollectionUpdate = (querySnapshot) => {
     const messages = [];
-    // go through each document
+    // Goes through each document
     querySnapshot.forEach((doc) => {
-      // get the QueryDocumentSnapshot's data
-      let data = doc.data();
-      messages.push({
-        _id: data._id,
-        text: data.text || "",
-        createdAt: data.createdAt.toDate(),
-        user: data.user.name,
-        image: data.image || "",
-        location: data.location || null,
-      });
+      // Gets the QueryDocumentSnapshot's data
+      var data = doc.data();
+      if (data._id) {
+        messages.push({
+          _id: data._id,
+          text: data.text || "",
+          createdAt: data.createdAt.toDate(),
+          user: {
+            _id: data.user._id,
+            name: data.user.name,
+            avatar: data.user.avatar,
+          },
+          image: data.image,
+          location: data.location,
+        });
+      }
     });
+
     this.setState({
-      messages: messages,
+      messages,
     });
   };
 
-  // Comes from my side
-  addMessage() {
-    const message = this.state.messages[0]; //adding the currently sent message
-    // add the new messages to the collection reference and to firebase
-    this.referenceMessages.add({
-      _id: message._id,
-      text: message.text,
-      createdAt: message.createdAt,
-      user: message.user,
-      image: message.image || "",
-      location: message.location || null,
-    });
-  }
 
-  onSend = (messages = []) => {
+  // Sends the written text to the chat screen
+  onSend(messages = []) {
     this.setState(
       (previousState) => ({
         messages: GiftedChat.append(previousState.messages, messages),
@@ -210,22 +214,8 @@ export default class Chat extends React.Component {
         this.saveMessages();
       }
     );
-  };
+  }
 
-  // renderSystemMsg(props) {
-  //   return (
-  //     <SystemMessage
-  //       {...props}
-  //       textStyle={{ color: "grey", fontSize: 14 }}
-  //       wrapperStyle={{
-  //         borderWidth: 1,
-  //         borderColor: "grey",
-  //         flex: "60%",
-  //         alignItems: "center",
-  //       }}
-  //     />
-  //   );
-  // }
   renderInputToolbar(props) {
     if (this.state.isConnected == false) {
     } else {
@@ -289,11 +279,11 @@ export default class Chat extends React.Component {
       >
         <GiftedChat
           style={{ width: 100, height: 20 }}
+          isConnected={this.state.isConnected}
           renderBubble={this.renderBubble.bind(this)}
           renderInputToolbar={this.renderInputToolbar.bind(this)}
           renderActions={this.renderCustomActions}
           renderCustomView={this.renderCustomView}
-          renderSystemMessage={this.renderSystemMsg}
           messages={this.state.messages}
           onSend={(messages) => this.onSend(messages)}
           user={{

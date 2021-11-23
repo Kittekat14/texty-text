@@ -1,5 +1,5 @@
 import React from 'react';
-import { StyleSheet, Text, View, Button } from 'react-native';
+import { StyleSheet, YellowBox } from 'react-native';
 import Start from './components/Start';
 import Chat from './components/Chat';
 // import react native gesture handler
@@ -15,6 +15,8 @@ const Stack = createStackNavigator();
 
 export default class App extends React.Component {
   render() {
+    //console.disableYellowBox = true; 
+
     return (
       <NavigationContainer>
         <Stack.Navigator initialRouteName="Start">
