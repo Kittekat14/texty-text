@@ -3,12 +3,11 @@ import React from "react";
 import firebase from "firebase";
 import "firebase/firestore";
 
-import { KeyboardAvoidingView, View, Text, Icon, Platform, TouchableOpacity } from "react-native";
+import { KeyboardAvoidingView, View, Platform } from "react-native";
 import {
   GiftedChat,
   Bubble,
-  InputToolbar,
-  SystemMessage,
+  InputToolbar
 } from "react-native-gifted-chat";
 import MapView from "react-native-maps";
 import AsyncStorage from "@react-native-async-storage/async-storage";
@@ -16,10 +15,10 @@ import NetInfo from "@react-native-community/netinfo";
 
 import CustomActions from './CustomActions';
 
+//getting rid of some warnings because of LogBox
 import { YellowBox } from "react-native";
 import _ from "lodash";
 import { CurrentRenderContext } from "@react-navigation/native";
-
 YellowBox.ignoreWarnings(["Setting a timer"]);
 const _console = _.clone(console);
 console.warn = (message) => {
@@ -50,8 +49,8 @@ export default class Chat extends React.Component {
         avatar: "",
       },
       isConnected: false,
-      image: "",
-      location: {},
+      image: null,
+      location: null,
     };
 
     // Initialize Firebase
@@ -60,7 +59,6 @@ export default class Chat extends React.Component {
     }
     // reference to messages collection in the constructor of my class component
     this.referenceMessages = firebase.firestore().collection("messages");
-    this.referenceMessageUser = null;
   }
 
   //gets messages from AsyncStorage
