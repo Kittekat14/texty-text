@@ -50,7 +50,7 @@ export default class Chat extends React.Component {
         avatar: "",
       },
       isConnected: false,
-      image: '',
+      image: "",
       location: {},
     };
 
@@ -122,7 +122,7 @@ export default class Chat extends React.Component {
                 name: text,
                 avatar: "https://placeimg.com/140/140/any",
               },
-              messages: []
+              messages: [],
             });
 
             this.saveMessages();
@@ -202,17 +202,17 @@ export default class Chat extends React.Component {
     });
   }
 
-  onSend(messages = []) {
+  onSend = (messages = []) => {
     this.setState(
       (previousState) => ({
         messages: GiftedChat.append(previousState.messages, messages),
       }),
       () => {
-        this.addMessage(); // save message in firestore
-        this.saveMessages(); //save message in localStorage of App
+        this.addMessage();
+        this.saveMessages();
       }
     );
-  }
+  };
 
   renderSystemMsg(props) {
     return (
