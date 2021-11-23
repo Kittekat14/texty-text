@@ -132,7 +132,6 @@ export default class Chat extends React.Component {
             }
             // Adding user to state
             this.setState({
-              uid: user.uid,
               user: {
                 _id: user.uid,
                 name: this.props.route.params.text,
@@ -149,7 +148,7 @@ export default class Chat extends React.Component {
 
             // Listening for collection changes for current user
             this.unsubscribe = this.referenceMessages
-              // .orderBy("createdAt", "desc")
+              .orderBy("createdAt", "desc")
               .onSnapshot(this.onCollectionUpdate);
           });
       //saving messages locally to asyncStorage
@@ -174,6 +173,7 @@ export default class Chat extends React.Component {
     querySnapshot.forEach((doc) => {
       // Gets the QueryDocumentSnapshot's data
       var data = doc.data();
+      if(data._id){
         messages.push({
           _id: data._id,
           text: data.text || "",
@@ -186,6 +186,7 @@ export default class Chat extends React.Component {
           image: data.image || null,
           location: data.location || null,
         });
+      }
     });
 
     this.setState({
@@ -209,7 +210,6 @@ export default class Chat extends React.Component {
   addMessage() {
     const message = this.state.messages[0];
     this.referenceMessages.add({
-      uid: this.state.uid,
       _id: message._id,
       createdAt: message.createdAt,
       text: message.text || "",
