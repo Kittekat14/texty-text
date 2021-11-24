@@ -13,10 +13,11 @@ React Native is a React framework for building Android and iOS apps that require
 
 ### Platform used during Development: 
 - Android 11.0
-- React version
-- React Native version
-- Nodejs version
-- react-native-gifted-chat version
+- React (version 17.0.1)
+- React Native (version ^0.64.3)
+- Nodejs (version 16.13.0)
+- react-native-gifted-chat (version ^0.16.3)
+(more see in package.json file)
 
 ### Used Developement Evironment:
 - Expo Cli (global)
