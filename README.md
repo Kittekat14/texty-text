@@ -49,7 +49,7 @@ React Native is a React framework for building Android and iOS apps that require
 
 Getting started:
 1.	In your terminal: go to the project folder (root folder) and run “npm install” (or “yarn install”) to install all necessary packages from the package.json file and their corresponding versions.
-2.	To launch the metro bundler, run “start expo” in the metro bundler will open in a browser window or tab, where you can copy the QR code with your camera (iOS) or the Expo Go App (Android). You find the Expo Go App on the Google Play Store.
+2.	To launch the metro bundler, run “start expo” and the metro bundler will open in a browser window or tab, where you can copy the QR code with your camera (iOS) or the Expo Go App (Android). You find the Expo Go App on the Google Play Store.
 3.	If you want to run the App on an Emulator, launch the Emulator first, then type “i” (iOS) or “a” (Android) to launch Expo in your chosen Emulator. You don’t have to install the Expo App here.
 
 
