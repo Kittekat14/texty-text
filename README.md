@@ -4,28 +4,29 @@ This Chat App is developed using React Native and Expo. The data will be stored 
 I will be using the Gifted Chat React Native library. The Chat App will allow users to send not only text messages, but also messages that contain images. They will also be able to share their location with others.
 React Native is a React framework for building Android and iOS apps that requires only one codebase instead of multiple for Android (Java/Kotlin) or iOS apps (Swift).
 
-Features:
+## Features:
 - Users can navigate between Home Screen and Chat Screen
 - Users can choose a background color for their chat screen from a selection of colors
 - Users can choose a Username, that will displayed to them in the navigation header
 - Users can send messages of text and images (taken by phone's camera or from phone's library) and share a map of their location 
 - Users can read all the sent messages, even when offline (but cannot write and send new ones)
 
-Platform used during Development: Android 11.0
+### Platform used during Development: 
+- Android 11.0
 - React version
 - React Native version
 - Nodejs version
 - react-native-gifted-chat version
 
-Used Developement Evironment:
-•	Expo Cli (global)
-•	Android Studio:
+### Used Developement Evironment:
+- Expo Cli (global)
+- Android Studio:
 - Android Emulator
 - Android 11.0 (R)
 - Android SDK Platform-Tools
 - Intel x86 Emulator Accelerator (HAXM installer) or Android Emulator Hypervisor Driver for AMD Processors (Installer)
 
-Libraries (to install all dependencies all at once, use "npm install" when in the root folder of this project):
+### Libraries (to install all dependencies all at once, use "npm install" when in the root folder of this project):
 •	React
 •	React-Dom
 •	React-Native
