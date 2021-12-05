@@ -8,7 +8,8 @@ React Native is a React framework for building Android and iOS apps that require
 - Users can navigate between Home Screen and Chat Screen
 - Users can choose a background color for their chat screen from a selection of colors
 - Users can choose a Username, that will displayed to them in the navigation header
-- Users can send messages of text and images (taken by phone's camera or from phone's library) and share a map of their location 
+- Users can send messages of text and images (taken by phone's camera or from phone's library) and share a map of their location
+- App asks for permission before accessing location data, media library and camera
 - Users can read all the sent messages, even when offline (but cannot write and send new ones)
 
 ### Platform used during Development: 
