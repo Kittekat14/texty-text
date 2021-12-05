@@ -52,11 +52,7 @@ Getting started:
 2.	To launch the metro bundler, run “start expo” and the metro bundler will open in a browser window or tab, where you can copy the QR code with your camera (iOS) or the Expo Go App (Android). You find the Expo Go App on the Google Play Store.
 3.	If you want to run the App on an Emulator, launch the Emulator first, then type “i” (iOS) or “a” (Android) to launch Expo in your chosen Emulator. You don’t have to install the Expo App here, it will be installed automatically.
 
-## SCREENSHOTS:
-
-![React-Native-project](https://user-images.githubusercontent.com/83455469/144747567-47c002a4-f43f-4f4c-a48d-20ece91a6050.png)
-
-## DEMO:
+### Demo Video:
 
 https://user-images.githubusercontent.com/83455469/144747772-4c7bf55f-fdc3-4245-b2d4-449253f91b95.mp4
 
