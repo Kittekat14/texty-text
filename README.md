@@ -1,4 +1,4 @@
-## CHAT APP ##
+# CHAT APP
 
 This Chat App is developed using React Native and Expo. The data will be stored in Google's Firestore [How to set up Firebase for your Javascript project](https://firebase.google.com/docs/web/setup).
 I will be using the Gifted Chat React Native library. The Chat App will allow users to send not only text messages, but also messages that contain images. They will also be able to share their location with others.
@@ -56,6 +56,10 @@ Getting started:
 ### Demo Video:
 
 https://user-images.githubusercontent.com/83455469/144747772-4c7bf55f-fdc3-4245-b2d4-449253f91b95.mp4
+
+## Contact me on LinkedIn or view my other projects:
+[My Profile](https://www.linkedin.com/in/katrin-hofstetter-25b945181/).
+[My Portfolio Website](https://Kittekat14.github.io/portfolio-website).
 
 
 
